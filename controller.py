@@ -14,6 +14,7 @@ def show():
     global main
 
 placerSupport()
+print("hello");
 
 
 show()

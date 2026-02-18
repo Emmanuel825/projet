@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+from model import *
 
 # ----------------------------
 # Configuration
@@ -90,5 +91,16 @@ for row in range(NB_CASES):
         text=str(numero),
         font=("Arial", 14, "bold")
     )
+
+def placerSupport():
+    
+    global cnv
+    global WIDTH
+    global HEIGHT
+    global label
+    root = Tk()
+    root.title("Image avec Tkinter")
+    image = PhotoImage(file="./plateau.png")
+    label = Label(root, image=image)
 
 root.mainloop()

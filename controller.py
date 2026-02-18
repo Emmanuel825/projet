@@ -14,7 +14,7 @@ def show():
     global main
 
 placerSupport()
-
+print("bonjour")
 
 show()
 main.mainloop()

@@ -1,6 +1,6 @@
 import tkinter as tk
-from PIL import Image, ImageTk
-from model import *
+from PIL import Image,ImageTk
+import model 
 
 # ----------------------------
 # Configuration

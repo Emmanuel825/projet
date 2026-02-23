@@ -16,5 +16,6 @@ def getPiece(x, y):
     return plateau[y][x][0]
 
 def deplacerPiece(x1, y1, x2, y2):
-    plateau[y2][x2] = plateau[y1][x1]
-    plateau[y1][x1] = ("", None)
+    if(x1 != x2 and y1 != y2):
+        plateau[y2][x2] = plateau[y1][x1]
+        plateau[y1][x1] = ("", None)

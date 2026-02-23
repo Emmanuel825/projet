@@ -16,6 +16,13 @@ def getPiece(x, y):
     return plateau[y][x][0]
 
 def deplacerPiece(x1, y1, x2, y2):
-    if(x1 != x2 and y1 != y2):
-        plateau[y2][x2] = plateau[y1][x1]
-        plateau[y1][x1] = ("", None)
+    if(plateau[x1][y1][0]=="歩"):
+        deplacerPion(x1, y1, x2, y2, plateau[x1][y1][1])
+        # plateau[y2][x2] = plateau[y1][x1]
+        # plateau[y1][x1] = ("", None)
+
+def deplacerPion(x1, y1, x2, y2, joueur):
+    if(x1 == x2):
+        if(joueur == "haut"):
+                if(y1 == y2+1):
+                        plateau[y2][x2] = plateau[y1][x1]

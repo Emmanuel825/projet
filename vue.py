@@ -18,7 +18,7 @@ def creer_fenetre():
     canvas.pack()
 
     # Fond
-    image = Image.open("bambou.jpeg")
+    image = Image.open("plateau.png")
     image = image.resize((LARGEUR, HAUTEUR), Image.LANCZOS)
     bg_image = ImageTk.PhotoImage(image)
 

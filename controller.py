@@ -1,21 +1,27 @@
-# -*- coding: utf-8 -*-
-"""
-Éditeur de Spyder
+import vue
+import model
 
-Ceci est un script temporaire.
-"""
-from vue import *
-from model import *
-def show():
-    global cnv
-    global label
-    global WIDTH
-    global HEIGHT
-    global main
+selection = None
 
-placerSupport()
-print("hello")
+root, canvas = vue.creer_fenetre()
 
+def clic(event):
+    global selection
+    print(event.x)
+    x = event.x // vue.TAILLE_CASE
+    y = event.y // vue.TAILLE_CASE
 
-show()
-main.mainloop()
+    if selection is None:
+        piece = model.getPiece(x, y)
+        if piece != "":
+            selection = (x, y)
+            print("Sélection :", piece)
+    else:
+        x1, y1 = selection
+        model.deplacerPiece(x1, y1, x, y)
+        selection = None
+        vue.rafraichir(canvas)
+
+canvas.bind("<Button-1>", clic)
+
+root.mainloop()

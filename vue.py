@@ -1,108 +1,97 @@
 import tkinter as tk
-from PIL import Image,ImageTk
-import model 
+from PIL import Image, ImageTk
+import model
 
-# ----------------------------
-# Configuration
-# ----------------------------
-def placerSupport():
-    NB_CASES = 9
-    TAILLE_CASE = 60
-    COULEUR_FOND = "#d8c8a8"
+TAILLE_CASE = 60
+NB_CASES = 9
+LARGEUR = TAILLE_CASE * NB_CASES
+HAUTEUR = TAILLE_CASE * NB_CASES
 
-    LARGEUR_PLATEAU = NB_CASES * TAILLE_CASE
-    HAUTEUR_PLATEAU = NB_CASES * TAILLE_CASE
+pieces_images = {}
+pieces_images_flip = {}
 
-    LARGEUR_FENETRE = 1400
-    HAUTEUR_FENETRE = 1000
-
-# ----------------------------
-# Calcul centrage automatique
-# ----------------------------
-    X_PLATEAU = (LARGEUR_FENETRE - LARGEUR_PLATEAU) // 2
-    Y_PLATEAU = (HAUTEUR_FENETRE - HAUTEUR_PLATEAU) // 2
-
-# ----------------------------
-# Fenêtre
-# ----------------------------
+def creer_fenetre():
     root = tk.Tk()
-    root.title("Plateau Shogi")
+    root.title("Shogi")
 
-    canvas = tk.Canvas(
-        root,
-        width=LARGEUR_FENETRE,
-        height=HAUTEUR_FENETRE,
-        bg=COULEUR_FOND,
-        highlightthickness=0
-    )
+    canvas = tk.Canvas(root, width=LARGEUR, height=HAUTEUR)
     canvas.pack()
 
-# ----------------------------
-# Image redimensionnée exactement à la taille du plateau
-# ----------------------------
-    image_originale = Image.open("plateau.png")
+    # Fond
+    image = Image.open("bambou.jpeg")
+    image = image.resize((LARGEUR, HAUTEUR), Image.LANCZOS)
+    bg_image = ImageTk.PhotoImage(image)
 
-    image_redimensionnee = image_originale.resize(
-        (LARGEUR_PLATEAU+60, HAUTEUR_PLATEAU+60),
-        Image.Resampling.LANCZOS
-    )
+    canvas.bg_image = bg_image
+    canvas.create_image(0, 0, image=bg_image, anchor="nw")
 
-    texture = ImageTk.PhotoImage(image_redimensionnee)
+    charger_images()
 
-    canvas.create_image(X_PLATEAU-30, Y_PLATEAU-30, anchor="nw", image=texture)
+    dessiner_plateau(canvas)
+    dessiner_pieces(canvas)
 
-# ----------------------------
-# Grille
-# ----------------------------
+    return root, canvas
+
+
+def charger_images():
+    global pieces_images, pieces_images_flip
+
+    sheet = Image.open("pieces.png")
+    largeur_piece = sheet.width // 8
+    hauteur_piece = sheet.height // 4
+
+    noms = ["王","飛","角","金","銀","桂","香","歩"]
+
+    for col in range(8):
+        x1 = col * largeur_piece
+        y1 = 0
+        x2 = x1 + largeur_piece
+        y2 = hauteur_piece
+
+        piece_img = sheet.crop((x1, y1, x2, y2))
+        piece_img = piece_img.resize((TAILLE_CASE, TAILLE_CASE), Image.LANCZOS)
+
+        photo = ImageTk.PhotoImage(piece_img)
+        pieces_images[noms[col]] = photo
+
+        piece_flip = piece_img.rotate(180)
+        photo_flip = ImageTk.PhotoImage(piece_flip)
+        pieces_images_flip[noms[col]] = photo_flip
+
+    pieces_images["玉"] = pieces_images["王"]
+    pieces_images_flip["玉"] = pieces_images_flip["王"]
+
+
+def dessiner_plateau(canvas):
     for i in range(NB_CASES + 1):
-    # Lignes verticales
-        x = X_PLATEAU + i * TAILLE_CASE
-        canvas.create_line(x, Y_PLATEAU, x, Y_PLATEAU + HAUTEUR_PLATEAU, width=2)
+        canvas.create_line(0, i * TAILLE_CASE, LARGEUR, i * TAILLE_CASE, width=2)
+        canvas.create_line(i * TAILLE_CASE, 0, i * TAILLE_CASE, HAUTEUR, width=2)
 
-    # Lignes horizontales
-        y = Y_PLATEAU + i * TAILLE_CASE
-        canvas.create_line(X_PLATEAU, y, X_PLATEAU + LARGEUR_PLATEAU, y, width=2)
 
-# ----------------------------
-# Index colonnes (9 → 1)
-# ----------------------------
-    for col in range(NB_CASES):
-        numero = NB_CASES - col
-        x = X_PLATEAU + col * TAILLE_CASE + TAILLE_CASE / 2
-        y = Y_PLATEAU - 20
+def dessiner_pieces(canvas):
+    canvas.images = []
 
-        canvas.create_text(
-            x,
-            y,
-            text=str(numero),
-            font=("Arial", 14, "bold")
-        )
+    for y in range(NB_CASES):
+        for x in range(NB_CASES):
 
-# ----------------------------
-# Index lignes (1 → 9)
-# ----------------------------
-    for row in range(NB_CASES):
-        numero = row + 1
-        x = X_PLATEAU + LARGEUR_PLATEAU + 20
-        y = Y_PLATEAU + row * TAILLE_CASE + TAILLE_CASE / 2
+            piece, joueur = model.plateau[y][x]
 
-        canvas.create_text(
-            x,
-            y,
-            text=str(numero),
-            font=("Arial", 14, "bold")
-        )
-"""""
-def placerSupport():
-    
-    global cnv
-    global WIDTH
-    global HEIGHT
-    global label
-    root = Tk()
-    root.title("Image avec Tkinter")
-    image = PhotoImage(file="./plateau.png")
-    label = Label(root, image=image)
-"""
-#root.mainloop()
+            if piece != "" and piece in pieces_images:
 
+                cx = x * TAILLE_CASE
+                cy = y * TAILLE_CASE
+
+                if joueur == "haut":
+                    img = pieces_images_flip[piece]
+                else:
+                    img = pieces_images[piece]
+
+                canvas.create_image(cx, cy, image=img, anchor="nw")
+                canvas.images.append(img)
+
+
+def rafraichir(canvas):
+    canvas.delete("all")
+    canvas.create_image(0, 0, image=canvas.bg_image, anchor="nw")
+    dessiner_plateau(canvas)
+    dessiner_pieces(canvas)

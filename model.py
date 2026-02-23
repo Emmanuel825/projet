@@ -1,54 +1,20 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Feb 10 13:57:07 2026
+NB_CASES = 9
 
-@author: mrodri07
-"""
-from tkinter import *
-from functools import *
+plateau = [
+    [("香","haut"),("桂","haut"),("銀","haut"),("金","haut"),("王","haut"),("金","haut"),("銀","haut"),("桂","haut"),("香","haut")],
+    [("",None),("飛","haut"),("",None),("",None),("",None),("",None),("",None),("角","haut"),("",None)],
+    [("歩","haut"),("歩","haut"),("歩","haut"),("歩","haut"),("歩","haut"),("歩","haut"),("歩","haut"),("歩","haut"),("歩","haut")],
+    [("",None)]*9,
+    [("",None)]*9,
+    [("",None)]*9,
+    [("歩","bas"),("歩","bas"),("歩","bas"),("歩","bas"),("歩","bas"),("歩","bas"),("歩","bas"),("歩","bas"),("歩","bas")],
+    [("",None),("角","bas"),("",None),("",None),("",None),("",None),("",None),("飛","bas"),("",None)],
+    [("香","bas"),("桂","bas"),("銀","bas"),("金","bas"),("玉","bas"),("金","bas"),("銀","bas"),("桂","bas"),("香","bas")],
+]
 
-global WIDTH
-global HEIGHT
-global main
-WIDTH = 450
-HEIGHT = 450
-if WIDTH < HEIGHT :
-    MIN = WIDTH
-    WIDTH = HEIGHT
-    HEIGHT = MIN
+def getPiece(x, y):
+    return plateau[y][x][0]
 
-global ROI 
-global TOUR
-global FOU
-global OR
-global ARGENT
-global CAVALIERS
-global LANCES
-global PION
-ROI = 8
-TOUR = 7
-FOU = 6
-OR = 5
-ARGENT = 4
-CAVALIERS = 3
-LANCES = 2
-PION = 1
-global Sente
-Sente = [[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
-        [1,1,1,1,1,1,1,1,1],[0,6,0,0,0,0,0,7,0],[2,3,4,5,8,5,4,3,2]]
-global Gote
-Gote = [[2,3,4,5,8,5,4,3,2],[0,7,0,0,0,0,0,6,0],[1,1,1,1,1,1,1,1,1],
-        [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]]
-global grille
-grille =[[2,3,4,5,8,5,4,3,2],[0,7,0,0,0,0,0,6,0],[1,1,1,1,1,1,1,1,1],
-        [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
-        [1,1,1,1,1,1,1,1,1],[0,6,0,0,0,0,0,7,0],[2,3,4,5,8,5,4,3,2]]
-global cnv
-global label
-main = Tk()
-cnv = Canvas(main, width=WIDTH, height=HEIGHT, bg='ivory')
-#label = Label(main,text = "Le Sente commence",font = ("Arial",14))
-
+def deplacerPiece(x1, y1, x2, y2):
+    plateau[y2][x2] = plateau[y1][x1]
+    plateau[y1][x1] = ("", None)

@@ -1,15 +1,15 @@
 NB_CASES = 9
 
 plateau = [
-    [("香","haut"),("桂","haut"),("銀","haut"),("金","haut"),("王","haut"),("金","haut"),("銀","haut"),("桂","haut"),("香","haut")],
-    [("",None),("飛","haut"),("",None),("",None),("",None),("",None),("",None),("角","haut"),("",None)],
-    [("歩","haut"),("歩","haut"),("歩","haut"),("歩","haut"),("歩","haut"),("歩","haut"),("歩","haut"),("歩","haut"),("歩","haut")],
+    [("香","Sente"),("桂","Sente"),("銀","Sente"),("金","Sente"),("王","Sente"),("金","Sente"),("銀","Sente"),("桂","Sente"),("香","Sente")],
+    [("",None),("飛","Sente"),("",None),("",None),("",None),("",None),("",None),("角","Sente"),("",None)],
+    [("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente")],
     [("",None)]*9,
     [("",None)]*9,
     [("",None)]*9,
-    [("歩","bas"),("歩","bas"),("歩","bas"),("歩","bas"),("歩","bas"),("歩","bas"),("歩","bas"),("歩","bas"),("歩","bas")],
-    [("",None),("角","bas"),("",None),("",None),("",None),("",None),("",None),("飛","bas"),("",None)],
-    [("香","bas"),("桂","bas"),("銀","bas"),("金","bas"),("玉","bas"),("金","bas"),("銀","bas"),("桂","bas"),("香","bas")],
+    [("歩","Gote"),("歩","Gote"),("歩","Gote"),("歩","Gote"),("歩","Gote"),("歩","Gote"),("歩","Gote"),("歩","Gote"),("歩","Gote")],
+    [("",None),("角","Gote"),("",None),("",None),("",None),("",None),("",None),("飛","Gote"),("",None)],
+    [("香","Gote"),("桂","Gote"),("銀","Gote"),("金","Gote"),("玉","Gote"),("金","Gote"),("銀","Gote"),("桂","Gote"),("香","Gote")],
 ]
 
 def getPiece(x, y):

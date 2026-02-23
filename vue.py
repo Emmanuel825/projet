@@ -18,8 +18,13 @@ def creer_fenetre():
     root = tk.Tk()
     root.title("Shogi")
 
-    canvas = tk.Canvas(root, width=JEU_LARGEUR, height=JEU_HAUTEUR, background="red")
+    canvas = tk.Canvas(root, width=JEU_LARGEUR, height=JEU_HAUTEUR)
     canvas.pack()
+
+    fond = Image.open("./fond1.webp")
+    fond = fond.resize((JEU_LARGEUR, JEU_HAUTEUR), Image.LANCZOS)
+    bg_fond = ImageTk.PhotoImage(fond)
+    canvas.create_image(0,0, image=bg_fond, anchor="nw")
 
     # Fond
     image = Image.open("plateau.png")

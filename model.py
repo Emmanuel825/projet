@@ -1,7 +1,7 @@
 NB_CASES = 9
 
 plateau = [
-    [("香","haut"),("桂","Sente"),("銀","Sente"),("金","Sente"),("王","Sente"),("金","Sente"),("銀","Sente"),("桂","Sente"),("香","Sente")],
+    [("香","Sente"),("桂","Sente"),("銀","Sente"),("金","Sente"),("王","Sente"),("金","Sente"),("銀","Sente"),("桂","Sente"),("香","Sente")],
     [("",None),("飛","Sente"),("",None),("",None),("",None),("",None),("",None),("角","Sente"),("",None)],
     [("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente")],
     [("",None)]*9,

@@ -8,8 +8,8 @@ root, canvas = vue.creer_fenetre()
 def clic(event):
     global selection
     print(event.x)
-    x = event.x // vue.TAILLE_CASE
-    y = event.y // vue.TAILLE_CASE
+    x = (event.x-vue.PADDING_X) // vue.TAILLE_CASE
+    y = (event.y-vue.PADDING_Y) // vue.TAILLE_CASE
 
     if selection is None:
         piece = model.getPiece(x, y)

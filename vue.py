@@ -4,8 +4,12 @@ import model
 
 TAILLE_CASE = 60
 NB_CASES = 9
+JEU_HAUTEUR = 700
+JEU_LARGEUR = 900
 LARGEUR = TAILLE_CASE * NB_CASES
 HAUTEUR = TAILLE_CASE * NB_CASES
+PADDING_X = (JEU_LARGEUR//2)-(LARGEUR//2)
+PADDING_Y = (JEU_HAUTEUR//2)-(HAUTEUR//2)
 
 pieces_images = {}
 pieces_images_flip = {}
@@ -14,7 +18,7 @@ def creer_fenetre():
     root = tk.Tk()
     root.title("Shogi")
 
-    canvas = tk.Canvas(root, width=LARGEUR, height=HAUTEUR)
+    canvas = tk.Canvas(root, width=JEU_LARGEUR, height=JEU_HAUTEUR, background="red")
     canvas.pack()
 
     # Fond
@@ -23,7 +27,8 @@ def creer_fenetre():
     bg_image = ImageTk.PhotoImage(image)
 
     canvas.bg_image = bg_image
-    canvas.create_image(0, 0, image=bg_image, anchor="nw")
+    
+    canvas.create_image(PADDING_X, PADDING_Y, image=bg_image, anchor="nw")
 
     charger_images()
 
@@ -64,8 +69,8 @@ def charger_images():
 
 def dessiner_plateau(canvas):
     for i in range(NB_CASES + 1):
-        canvas.create_line(0, i * TAILLE_CASE, LARGEUR, i * TAILLE_CASE, width=2)
-        canvas.create_line(i * TAILLE_CASE, 0, i * TAILLE_CASE, HAUTEUR, width=2)
+        canvas.create_line(PADDING_X, (i * TAILLE_CASE)+PADDING_Y, PADDING_X+LARGEUR, (i * TAILLE_CASE)+PADDING_Y, width=2)
+        canvas.create_line((i * TAILLE_CASE)+PADDING_X, PADDING_Y, (i * TAILLE_CASE)+PADDING_X, PADDING_Y+HAUTEUR, width=2)
 
 
 def dessiner_pieces(canvas):
@@ -73,13 +78,13 @@ def dessiner_pieces(canvas):
 
     for y in range(NB_CASES):
         for x in range(NB_CASES):
-
+            #récupère les pièces et les joueurs auxquels elles appartiennent
             piece, joueur = model.plateau[y][x]
 
             if piece != "" and piece in pieces_images:
 
-                cx = x * TAILLE_CASE
-                cy = y * TAILLE_CASE
+                cx = (x * TAILLE_CASE)+PADDING_X
+                cy = (y * TAILLE_CASE)+PADDING_Y
 
                 if joueur == "haut":
                     img = pieces_images_flip[piece]
@@ -92,6 +97,6 @@ def dessiner_pieces(canvas):
 
 def rafraichir(canvas):
     canvas.delete("all")
-    canvas.create_image(0, 0, image=canvas.bg_image, anchor="nw")
+    canvas.create_image(PADDING_X, PADDING_Y, image=canvas.bg_image,anchor="nw")
     dessiner_plateau(canvas)
     dessiner_pieces(canvas)

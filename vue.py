@@ -21,10 +21,7 @@ def creer_fenetre():
     canvas = tk.Canvas(root, width=JEU_LARGEUR, height=JEU_HAUTEUR)
     canvas.pack()
 
-    fond = Image.open("./fond1.webp")
-    fond = fond.resize((JEU_LARGEUR, JEU_HAUTEUR), Image.LANCZOS)
-    bg_fond = ImageTk.PhotoImage(fond)
-    canvas.create_image(0,0, image=bg_fond, anchor="nw")
+
 
     # Fond
     image = Image.open("plateau.png")
@@ -91,7 +88,7 @@ def dessiner_pieces(canvas):
                 cx = (x * TAILLE_CASE)+PADDING_X
                 cy = (y * TAILLE_CASE)+PADDING_Y
 
-                if joueur == "haut":
+                if joueur == "Sente":
                     img = pieces_images_flip[piece]
                 else:
                     img = pieces_images[piece]

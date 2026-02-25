@@ -81,7 +81,7 @@ def dessiner_pieces(canvas):
     for y in range(NB_CASES):
         for x in range(NB_CASES):
             #récupère les pièces et les joueurs auxquels elles appartiennent
-            piece, joueur = model.plateau[y][x]
+            piece, joueur, promu = model.plateau[y][x]
 
             if piece != "" and piece in pieces_images:
 

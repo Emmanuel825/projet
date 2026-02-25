@@ -1,15 +1,16 @@
 NB_CASES = 9
 
+#ajout du champ "promu" dans les tuples de la liste
 plateau = [
-    [("香","Sente"),("桂","Sente"),("銀","Sente"),("金","Sente"),("王","Sente"),("金","Sente"),("銀","Sente"),("桂","Sente"),("香","Sente")],
-    [("",None),("飛","Sente"),("",None),("",None),("",None),("",None),("",None),("角","Sente"),("",None)],
-    [("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente"),("歩","Sente")],
-    [("",None)]*9,
-    [("",None)]*9,
-    [("",None)]*9,
-    [("歩","Gote"),("歩","Gote"),("歩","Gote"),("歩","Gote"),("歩","Gote"),("歩","Gote"),("歩","Gote"),("歩","Gote"),("歩","Gote")],
-    [("",None),("角","Gote"),("",None),("",None),("",None),("",None),("",None),("飛","Gote"),("",None)],
-    [("香","Gote"),("桂","Gote"),("銀","Gote"),("金","Gote"),("玉","Gote"),("金","Gote"),("銀","Gote"),("桂","Gote"),("香","Gote")],
+    [("香","Sente", False),("桂","Sente", False),("銀","Sente", False),("金","Sente", False),("王","Sente", False),("金","Sente", False),("銀","Sente", False),("桂","Sente", False),("香","Sente", False)],
+    [("",None, False),("飛","Sente", False),("",None, False),("",None, False),("",None, False),("",None, False),("",None, False),("角","Sente", False),("",None, False)],
+    [("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False)],
+    [("",None, False)]*9,
+    [("",None, False)]*9,
+    [("",None, False)]*9,
+    [("歩","Gote", False),("歩","Gote", False),("歩","Gote", False),("歩","Gote", False),("歩","Gote", False),("歩","Gote", False),("歩","Gote", False),("歩","Gote", False),("歩","Gote", False)],
+    [("",None, False),("角","Gote", False),("",None, False),("",None, False),("",None, False),("",None, False),("",None, False),("飛","Gote", False),("",None, False)],
+    [("香","Gote", False),("桂","Gote", False),("銀","Gote", False),("金","Gote", False),("玉","Gote", False),("金","Gote", False),("銀","Gote", False),("桂","Gote", False),("香","Gote", False)],
 ]
 
 def getPiece(x, y):

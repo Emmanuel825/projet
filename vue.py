@@ -32,22 +32,6 @@ def creer_fenetre():
     
     canvas.create_image(PADDING_X, PADDING_Y, image=bg_image, anchor="nw")
 
-    image2 = Image.open("koi.png")
-    image2 = image2.resize((200, 200), Image.LANCZOS)
-    bg_image2 = ImageTk.PhotoImage(image2)
-
-    canvas.bg_image2 = bg_image2
-    
-    canvas.create_image(PADDING_X-200,PADDING_Y, image=bg_image2, anchor="nw")
-
-    image3 = Image.open("tree.png")
-    image3 = image3.resize((200, 200), Image.LANCZOS)
-    bg_image3 = ImageTk.PhotoImage(image3)
-
-    canvas.bg_image3 = bg_image3
-    
-    canvas.create_image(PADDING_X*2+160,PADDING_Y*2+60, image=bg_image3, anchor="nw")
-
     charger_images()
 
     dessiner_plateau(canvas)
@@ -89,7 +73,20 @@ def dessiner_plateau(canvas):
     for i in range(NB_CASES + 1):
         canvas.create_line(PADDING_X, (i * TAILLE_CASE)+PADDING_Y, PADDING_X+LARGEUR, (i * TAILLE_CASE)+PADDING_Y, width=2)
         canvas.create_line((i * TAILLE_CASE)+PADDING_X, PADDING_Y, (i * TAILLE_CASE)+PADDING_X, PADDING_Y+HAUTEUR, width=2)
+    image2 = Image.open("koi.png")
+    image2 = image2.resize((200, 200), Image.LANCZOS)
+    bg_image2 = ImageTk.PhotoImage(image2)
 
+    canvas.bg_image2 = bg_image2
+    
+    canvas.create_image(PADDING_X-200,PADDING_Y, image=bg_image2, anchor="nw")
+    image3 = Image.open("tree.png")
+    image3 = image3.resize((200, 200), Image.LANCZOS)
+    bg_image3 = ImageTk.PhotoImage(image3)
+
+    canvas.bg_image3 = bg_image3
+    
+    canvas.create_image(PADDING_X*2+160,PADDING_Y*2+60, image=bg_image3, anchor="nw")
 
 def dessiner_pieces(canvas):
     canvas.images = []

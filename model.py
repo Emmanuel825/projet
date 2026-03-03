@@ -21,6 +21,9 @@ def deplacerPiece(x1, y1, x2, y2):
     if(plateau[y1][x1][0]=="歩"):
         deplacerPion(x1, y1, x2, y2, plateau[y1][x1][1])
 
+    if(plateau[y1][x1][0]=="角"):
+        deplacerFou(x1, y1, x2, y2, plateau[y1][x1][1])
+
 def deplacerPion(x1, y1, x2, y2, joueur):
     print(str(x1)+" "+str(y1)+" "+str(x2)+" "+str(y2)+" "+joueur)
     print(y2 == y1-1)
@@ -29,5 +32,37 @@ def deplacerPion(x1, y1, x2, y2, joueur):
                         print("test")
                         plateau[y2][x2] = plateau[y1][x1]
                         plateau[y1][x1] = ("",None, False)
-        
+
+def deplacerFou(x1, y1, x2, y2, joueur): 
+    dx = x2 - x1
+    dy = y2 - y1
+
+    # Vérifie diagonale
+    if abs(dx) != abs(dy):
+        return False
+
+    step_x = 1 if dx > 0 else -1
+    step_y = 1 if dy > 0 else -1
+
+    x = x1 + step_x
+    y = y1 + step_y
+
+    # Vérifie chemin libre
+    while (x, y) != (x2, y2):
+        if plateau[y][x][0] != "":
+            return False
+        x += step_x
+        y += step_y
+
+    # Vérifie capture
+    piece_cible, joueur_cible, _ = plateau[y2][x2]
+    if joueur_cible == joueur:
+        return False
+
+    plateau[y2][x2] = plateau[y1][x1]
+    plateau[y1][x1] = ("", None, False)
+    return True
+
+def deplacerTour(x1, y1, x2, y2, joueur):
+      pass      
              

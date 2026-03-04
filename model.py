@@ -2,7 +2,7 @@ NB_CASES = 9
 
 #ajout du champ "promu" dans les tuples de la liste
 plateau = [
-    [("香","Sente", False),("桂","Sente", False),("銀","Sente", False),("金","Sente", False),("王","Sente", False),("金","Sente", False),("銀","Sente", False),("桂","Sente", False),("香","Sente", False)],
+    [("香","Sente", False),("桂","Sente", False),("銀","Sente", False),("金","Sente", False),("玉","Sente", False),("金","Sente", False),("銀","Sente", False),("桂","Sente", False),("香","Sente", False)],
     [("",None, False),("飛","Sente", False),("",None, False),("",None, False),("",None, False),("",None, False),("",None, False),("角","Sente", False),("",None, False)],
     [("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False)],
     [("",None, False)]*9,
@@ -12,6 +12,8 @@ plateau = [
     [("",None, False),("角","Gote", False),("",None, False),("",None, False),("",None, False),("",None, False),("",None, False),("飛","Gote", False),("",None, False)],
     [("香","Gote", False),("桂","Gote", False),("銀","Gote", False),("金","Gote", False),("玉","Gote", False),("金","Gote", False),("銀","Gote", False),("桂","Gote", False),("香","Gote", False)],
 ]
+
+
 
 def getPiece(x, y):
     return plateau[y][x][0]
@@ -36,7 +38,7 @@ def deplacerPiece(x1, y1, x2, y2):
     if(plateau[y1][x1][0]=="銀"):
         deplacerGeneralargent(x1, y1, x2, y2, plateau[y1][x1][1])
 
-    if(plateau[y1][x1][0]=="金"):
+    if(plateau[y1][x1][0]=="金" or (plateau[y1][x1][2] == True and (plateau[y1][x1]!="飛" or plateau[y1][x1][0]!="角"))):
         deplacerGeneralor(x1, y1, x2, y2, plateau[y1][x1][1])
 
     if(plateau[y1][x1][0]=="玉"):
@@ -56,7 +58,7 @@ def deplacerFou(x1, y1, x2, y2, joueur):
     dy = y2 - y1
 
     # Vérifie diagonale
-    if abs(dx) != abs(dy):
+    if ((dx != dy)and(dx != -dy)):
         return False
 
     step_x = 1 if dx > 0 else -1
@@ -267,12 +269,7 @@ def deplacerRoi(x1, y1, x2, y2, joueur):
 
     # Interdiction de rester sur place
     if dx == 0 and dy == 0:
-        return False
-
-    # Vérifie capture alliée
-    piece_cible, joueur_cible, _ = plateau[y2][x2]
-    if joueur_cible == joueur:
-        return False
+        return False    
 
     # Déplacement
     plateau[y2][x2] = plateau[y1][x1]

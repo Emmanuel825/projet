@@ -9,7 +9,7 @@ JEU_LARGEUR = 1300
 LARGEUR = TAILLE_CASE * NB_CASES
 HAUTEUR = TAILLE_CASE * NB_CASES
 PADDING_X = (JEU_LARGEUR//2)-(LARGEUR//2)
-PADDING_Y = (JEU_HAUTEUR//2)-(HAUTEUR//2)
+PADDING_Y = (JEU_HAUTEUR//2)-(HAUTEUR)
 
 pieces_images = {}
 pieces_images_flip = {}
@@ -70,6 +70,7 @@ def charger_images():
 
 
 def dessiner_plateau(canvas):
+    
     for i in range(NB_CASES + 1):
         canvas.create_line(PADDING_X, (i * TAILLE_CASE)+PADDING_Y, PADDING_X+LARGEUR, (i * TAILLE_CASE)+PADDING_Y, width=2)
         canvas.create_line((i * TAILLE_CASE)+PADDING_X, PADDING_Y, (i * TAILLE_CASE)+PADDING_X, PADDING_Y+HAUTEUR, width=2)

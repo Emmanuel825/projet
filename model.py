@@ -2,15 +2,15 @@ NB_CASES = 9
 
 #ajout du champ "promu" dans les tuples de la liste
 plateau = [
-    [("香","Sente", False),("桂","Sente", False),("銀","Sente", False),("金","Sente", False),("玉","Sente", False),("金","Sente", False),("銀","Sente", False),("桂","Sente", False),("香","Sente", False)],
-    [("",None, False),("飛","Sente", False),("",None, False),("",None, False),("",None, False),("",None, False),("",None, False),("角","Sente", False),("",None, False)],
-    [("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False),("歩","Sente", False)],
-    [("",None, False)]*9,
-    [("",None, False)]*9,
-    [("",None, False)]*9,
-    [("歩","Gote", False),("歩","Gote", False),("歩","Gote", False),("歩","Gote", False),("歩","Gote", False),("歩","Gote", False),("歩","Gote", False),("歩","Gote", False),("歩","Gote", False)],
-    [("",None, False),("角","Gote", False),("",None, False),("",None, False),("",None, False),("",None, False),("",None, False),("飛","Gote", False),("",None, False)],
-    [("香","Gote", False),("桂","Gote", False),("銀","Gote", False),("金","Gote", False),("玉","Gote", False),("金","Gote", False),("銀","Gote", False),("桂","Gote", False),("香","Gote", False)],
+    [["香","Sente", False],["桂","Sente", False],["銀","Sente", False],["金","Sente", False],["玉","Sente", False],["金","Sente", False],["銀","Sente", False],["桂","Sente", False],["香","Sente", False]],
+    [["",None, False],["飛","Sente", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["角","Sente", False],["",None, False]],
+    [["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False]],
+    [["",None, False]]*9,
+    [["",None, False]]*9,
+    [["",None, False]]*9,
+    [["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False]],
+    [["",None, False],["角","Gote", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["飛","Gote", False],["",None, False]],
+    [["香","Gote", False],["桂","Gote", False],["銀","Gote", False],["金","Gote", False],["玉","Gote", False],["金","Gote", False],["銀","Gote", False],["桂","Gote", False],["香","Gote", False]],
 ]
 
 
@@ -20,38 +20,41 @@ def getPiece(x, y):
 
 def deplacerPiece(x1, y1, x2, y2):
     print("p : "+plateau[y1][x1][0]+" "+str(y1)+" "+str(x1))
+    reussiteDep = False
     if(plateau[y1][x1][0]=="歩"):
-        deplacerPion(x1, y1, x2, y2, plateau[y1][x1][1])
+        reussiteDep = deplacerPion(x1, y1, x2, y2, plateau[y1][x1][1])
 
     if(plateau[y1][x1][0]=="角"):
-        deplacerFou(x1, y1, x2, y2, plateau[y1][x1][1])
+        reussiteDep = deplacerFou(x1, y1, x2, y2, plateau[y1][x1][1])
 
     if(plateau[y1][x1][0]=="飛"):
-        deplacerTour(x1, y1, x2, y2, plateau[y1][x1][1])
+        reussiteDep = deplacerTour(x1, y1, x2, y2, plateau[y1][x1][1])
 
     if(plateau[y1][x1][0]=="香"):
-        deplacerLance(x1, y1, x2, y2, plateau[y1][x1][1])
+       reussiteDep = deplacerLance(x1, y1, x2, y2, plateau[y1][x1][1])
 
     if(plateau[y1][x1][0]=="桂"):
-        deplacercavalier(x1, y1, x2, y2, plateau[y1][x1][1])
+        reussiteDep = deplacercavalier(x1, y1, x2, y2, plateau[y1][x1][1])
 
     if(plateau[y1][x1][0]=="銀"):
-        deplacerGeneralargent(x1, y1, x2, y2, plateau[y1][x1][1])
+        reussiteDep = deplacerGeneralargent(x1, y1, x2, y2, plateau[y1][x1][1])
 
     if(plateau[y1][x1][0]=="金" or (plateau[y1][x1][2] == True and (plateau[y1][x1]!="飛" or plateau[y1][x1][0]!="角"))):
-        deplacerGeneralor(x1, y1, x2, y2, plateau[y1][x1][1])
+       reussiteDep = deplacerGeneralor(x1, y1, x2, y2, plateau[y1][x1][1])
 
     if(plateau[y1][x1][0]=="玉"):
-        deplacerRoi(x1, y1, x2, y2, plateau[y1][x1][1])
-
+        reussiteDep = deplacerRoi(x1, y1, x2, y2, plateau[y1][x1][1])
+    if reussiteDep == True :
+        if ((plateau[y2][x2][1] == "Gote" and y2 <=2) or (plateau[y2][x2][1] == "Sente" and y2 >=6)):
+            plateau[y2][x2][2]=True
+            print("promu")
+        
 def deplacerPion(x1, y1, x2, y2, joueur):
-    print(str(x1)+" "+str(y1)+" "+str(x2)+" "+str(y2)+" "+joueur)
-    print(y2 == y1-1)
     if(x1 == x2):
         if((y2 == y1+1 and joueur == "Sente")or(y2 == y1-1 and joueur == "Gote")):
-                        print("test")
                         plateau[y2][x2] = plateau[y1][x1]
                         plateau[y1][x1] = ("",None, False)
+    return True
 
 def deplacerFou(x1, y1, x2, y2, joueur): 
     dx = x2 - x1
@@ -59,6 +62,10 @@ def deplacerFou(x1, y1, x2, y2, joueur):
 
     # Vérifie diagonale
     if ((dx != dy)and(dx != -dy)):
+        if(((abs(dx)==1 and abs(dy)==0)or(abs(dx)==0 and abs(dy)==1)) and plateau[y1][x1][2]==True):
+            plateau[y2][x2] = plateau[y1][x1]
+            plateau[y1][x1] = ("", None, False)
+            return True
         return False
 
     step_x = 1 if dx > 0 else -1
@@ -86,9 +93,11 @@ def deplacerFou(x1, y1, x2, y2, joueur):
 def deplacerTour(x1, y1, x2, y2, joueur):
     dx = x2 - x1
     dy = y2 - y1
-
-    # Vérifie déplacement en ligne droite
     if dx != 0 and dy != 0:
+        if((abs(dx) == 1 and abs(dx)== abs(dy)) and plateau[y1][x1][2]==True):
+            plateau[y2][x2] = plateau[y1][x1]
+            plateau[y1][x1] = ("", None, False)
+            return True
         return False
 
     # Détermine la direction

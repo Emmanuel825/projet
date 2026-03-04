@@ -109,7 +109,7 @@ def dessiner_pieces(canvas):
 
                 canvas.create_image(cx, cy, image=img, anchor="nw")
                 canvas.images.append(img)
-
+#mettre l'option de promotion ainsi que l'option de non promotion
 
 def rafraichir(canvas):
     canvas.delete("all")

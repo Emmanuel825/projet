@@ -34,6 +34,10 @@ if promue:
             plateau[y2][x2] = plateau[y1][x1]
             plateau[y1][x1] = ("", None, False)
             return True
+
+
+# if piece =="歩" and promu == True :
+              #  img = pieces_images["と"]
 """
 
 

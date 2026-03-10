@@ -48,7 +48,6 @@ def charger_images():
     hauteur_piece = sheet.height // 4
 
     noms = ["王","飛","角","金","銀","桂","香","歩"]
-
     for col in range(8):
         x1 = col * largeur_piece
         y1 = 0
@@ -87,7 +86,7 @@ def dessiner_plateau(canvas):
 
     canvas.bg_image3 = bg_image3
     
-    canvas.create_image(PADDING_X*2+160,PADDING_Y*2+60, image=bg_image3, anchor="nw")
+    canvas.create_image(PADDING_X*2+160,PADDING_Y*2+330, image=bg_image3, anchor="nw")
 
 def dessiner_pieces(canvas):
     canvas.images = []
@@ -96,7 +95,6 @@ def dessiner_pieces(canvas):
         for x in range(NB_CASES):
             #récupère les pièces et les joueurs auxquels elles appartiennent
             piece, joueur, promu = model.plateau[y][x]
-
             if piece != "" and piece in pieces_images:
 
                 cx = (x * TAILLE_CASE)+PADDING_X
@@ -106,11 +104,12 @@ def dessiner_pieces(canvas):
                     img = pieces_images_flip[piece]
                 else:
                     img = pieces_images[piece]
-
+                    
                 canvas.create_image(cx, cy, image=img, anchor="nw")
                 canvas.images.append(img)
+        
 #mettre l'option de promotion ainsi que l'option de non promotion
-
+    #promotion = ["玉","竜","馬","全","圭","杏","と"]
 def rafraichir(canvas):
     canvas.delete("all")
     canvas.create_image(PADDING_X, PADDING_Y, image=canvas.bg_image,anchor="nw")

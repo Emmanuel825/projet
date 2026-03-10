@@ -78,7 +78,7 @@ def charger_images():
         photo_flip = ImageTk.PhotoImage(piece_flip)
         photo_promu_flip = ImageTk.PhotoImage(piece_promu_flip)
         pieces_images_flip[noms[col]] = photo_flip
-        pieces_images_flip[noms[col]] = photo_promu_flip
+        pieces_images_promu_flip[noms[col]] = photo_promu_flip
 
 
     pieces_images["玉"] = pieces_images["王"]
@@ -118,9 +118,15 @@ def dessiner_pieces(canvas):
                 cy = (y * TAILLE_CASE)+PADDING_Y
 
                 if joueur == "Sente":
-                    img = pieces_images_flip[piece]
+                    if promu == True:
+                        img == pieces_images_promu_flip[piece]
+                    else:
+                        img = pieces_images_flip[piece]
                 else:
-                    img = pieces_images[piece]
+                    if promu == True:
+                        img == pieces_images_promu[piece]
+                    else:
+                        img = pieces_images[piece]
                     
                 canvas.create_image(cx, cy, image=img, anchor="nw")
                 canvas.images.append(img)

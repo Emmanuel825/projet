@@ -86,7 +86,6 @@ def charger_images():
 
 
 def dessiner_plateau(canvas):
-    
     for i in range(NB_CASES + 1):
         canvas.create_line(PADDING_X, (i * TAILLE_CASE)+PADDING_Y, PADDING_X+LARGEUR, (i * TAILLE_CASE)+PADDING_Y, width=2)
         canvas.create_line((i * TAILLE_CASE)+PADDING_X, PADDING_Y, (i * TAILLE_CASE)+PADDING_X, PADDING_Y+HAUTEUR, width=2)
@@ -104,10 +103,12 @@ def dessiner_plateau(canvas):
     canvas.bg_image3 = bg_image3
     
     canvas.create_image(PADDING_X*2+160,PADDING_Y*2+330, image=bg_image3, anchor="nw")
+    
+
 
 def dessiner_pieces(canvas):
     canvas.images = []
-
+    
     for y in range(NB_CASES):
         for x in range(NB_CASES):
             #récupère les pièces et les joueurs auxquels elles appartiennent
@@ -135,6 +136,13 @@ def dessiner_pieces(canvas):
 #promotion = ["玉","竜","馬","全","圭","杏","と"]
 def rafraichir(canvas):
     canvas.delete("all")
+    image0 = Image.open("fond1.webp")
+    image0 = image0.resize((JEU_LARGEUR, 1000), Image.LANCZOS)
+    bg_image0 = ImageTk.PhotoImage(image0)
+
+    canvas.bg_image0 = bg_image0
+    
+    canvas.create_image(0,0, image=bg_image0, anchor="nw")
     canvas.create_image(PADDING_X, PADDING_Y, image=canvas.bg_image,anchor="nw")
     dessiner_plateau(canvas)
     dessiner_pieces(canvas)

@@ -13,6 +13,8 @@ PADDING_Y = (JEU_HAUTEUR//2)-(HAUTEUR)
 
 pieces_images = {}
 pieces_images_flip = {}
+pieces_images_promu = {}
+pieces_images_promu_flip = {}
 
 def creer_fenetre():
     root = tk.Tk()
@@ -56,13 +58,21 @@ def charger_images():
 
         piece_img = sheet.crop((x1, y1, x2, y2))
         piece_img = piece_img.resize((TAILLE_CASE, TAILLE_CASE), Image.LANCZOS)
-        
+        piece_img_promu = sheet.crop((x1, y2, x2, y2*2))
+        piece_img_promu = piece_img.resize((TAILLE_CASE, TAILLE_CASE), Image.LANCZOS)
+
         photo = ImageTk.PhotoImage(piece_img)
+        photo_promu = ImageTk.PhotoImage(piece_img_promu)
         pieces_images[noms[col]] = photo
+        pieces_images_promu[noms[col]] = photo_promu
 
         piece_flip = piece_img.rotate(180)
+        piece_promu_flip = piece_img_promu.rotate(180)
         photo_flip = ImageTk.PhotoImage(piece_flip)
+        photo_promu_flip = ImageTk.PhotoImage(piece_promu_flip)
         pieces_images_flip[noms[col]] = photo_flip
+        pieces_images_flip[noms[col]] = photo_promu_flip
+
 
     pieces_images["玉"] = pieces_images["王"]
     pieces_images_flip["玉"] = pieces_images_flip["王"]

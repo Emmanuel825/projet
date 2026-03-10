@@ -56,7 +56,7 @@ def charger_images():
 
         piece_img = sheet.crop((x1, y1, x2, y2))
         piece_img = piece_img.resize((TAILLE_CASE, TAILLE_CASE), Image.LANCZOS)
-
+        
         photo = ImageTk.PhotoImage(piece_img)
         pieces_images[noms[col]] = photo
 

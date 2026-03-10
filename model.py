@@ -2,7 +2,7 @@ NB_CASES = 9
 
 #ajout du champ "promu" dans les tuples de la liste
 plateau = [
-    [["香","Sente", False],["桂","Sente", False],["銀","Sente", False],["金","Sente", False],["玉","Sente", False],["金","Sente", False],["銀","Sente", False],["桂","Sente", False],["香","Sente", False]],
+    [["香","Sente", False],["桂","Sente", False],["銀","Sente", False],["金","Sente", False],["王","Sente", False],["金","Sente", False],["銀","Sente", False],["桂","Sente", False],["香","Sente", False]],
     [["",None, False],["飛","Sente", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["角","Sente", False],["",None, False]],
     [["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False]],
     [["",None, False]]*9,
@@ -10,7 +10,7 @@ plateau = [
     [["",None, False]]*9,
     [["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False]],
     [["",None, False],["角","Gote", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["飛","Gote", False],["",None, False]],
-    [["香","Gote", False],["桂","Gote", False],["銀","Gote", False],["金","Gote", False],["玉","Gote", False],["金","Gote", False],["銀","Gote", False],["桂","Gote", False],["香","Gote", False]],
+    [["香","Gote", False],["桂","Gote", False],["銀","Gote", False],["金","Gote", False],["王","Gote", False],["金","Gote", False],["銀","Gote", False],["桂","Gote", False],["香","Gote", False]],
 ]
 
 
@@ -21,33 +21,34 @@ def getPiece(x, y):
 def deplacerPiece(x1, y1, x2, y2):
     print("p : "+plateau[y1][x1][0]+" "+str(y1)+" "+str(x1))
     reussiteDep = False
-    if(plateau[y1][x1][0]=="歩"):
-        reussiteDep = deplacerPion(x1, y1, x2, y2, plateau[y1][x1][1])
+    if(plateau[y1][x1][1] != plateau[y2][x2][1]):
+        if(plateau[y1][x1][0]=="歩"):
+            reussiteDep = deplacerPion(x1, y1, x2, y2, plateau[y1][x1][1])
 
-    if(plateau[y1][x1][0]=="角"):
-        reussiteDep = deplacerFou(x1, y1, x2, y2, plateau[y1][x1][1])
+        if(plateau[y1][x1][0]=="角"):
+            reussiteDep = deplacerFou(x1, y1, x2, y2, plateau[y1][x1][1])
 
-    if(plateau[y1][x1][0]=="飛"):
-        reussiteDep = deplacerTour(x1, y1, x2, y2, plateau[y1][x1][1])
+        if(plateau[y1][x1][0]=="飛"):
+            reussiteDep = deplacerTour(x1, y1, x2, y2, plateau[y1][x1][1])
 
-    if(plateau[y1][x1][0]=="香"):
-       reussiteDep = deplacerLance(x1, y1, x2, y2, plateau[y1][x1][1])
+        if(plateau[y1][x1][0]=="香"):
+            reussiteDep = deplacerLance(x1, y1, x2, y2, plateau[y1][x1][1])
 
-    if(plateau[y1][x1][0]=="桂"):
-        reussiteDep = deplacercavalier(x1, y1, x2, y2, plateau[y1][x1][1])
+        if(plateau[y1][x1][0]=="桂"):
+            reussiteDep = deplacercavalier(x1, y1, x2, y2, plateau[y1][x1][1])
 
-    if(plateau[y1][x1][0]=="銀"):
-        reussiteDep = deplacerGeneralargent(x1, y1, x2, y2, plateau[y1][x1][1])
+        if(plateau[y1][x1][0]=="銀"):
+            reussiteDep = deplacerGeneralargent(x1, y1, x2, y2, plateau[y1][x1][1])
 
-    if(plateau[y1][x1][0]=="金" or (plateau[y1][x1][2] == True and (plateau[y1][x1]!="飛" or plateau[y1][x1][0]!="角"))):
-       reussiteDep = deplacerGeneralor(x1, y1, x2, y2, plateau[y1][x1][1])
+        if(plateau[y1][x1][0]=="金" or (plateau[y1][x1][2] == True and (plateau[y1][x1]!="飛" or plateau[y1][x1][0]!="角" or plateau[y1][x1]!="王"))):
+            reussiteDep = deplacerGeneralor(x1, y1, x2, y2, plateau[y1][x1][1])
 
-    if(plateau[y1][x1][0]=="玉"):
-        reussiteDep = deplacerRoi(x1, y1, x2, y2, plateau[y1][x1][1])
-    if reussiteDep == True :
-        if ((plateau[y2][x2][1] == "Gote" and y2 <=2) or (plateau[y2][x2][1] == "Sente" and y2 >=6)):
-            plateau[y2][x2][2]=True
-            print("promu")
+        if(plateau[y1][x1][0]=="王"):
+            reussiteDep = deplacerRoi(x1, y1, x2, y2, plateau[y1][x1][1])
+        if reussiteDep == True :
+            if ((plateau[y2][x2][1] == "Gote" and y2 <=2) or (plateau[y2][x2][1] == "Sente" and y2 >=6)):
+                plateau[y2][x2][2]=True
+                print("promu")
         
 def deplacerPion(x1, y1, x2, y2, joueur):
     if(x1 == x2):

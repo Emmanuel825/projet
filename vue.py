@@ -66,7 +66,7 @@ def charger_images():
         piece_img = sheet.crop((x1, y1, x2, y2))
         piece_img = piece_img.resize((TAILLE_CASE, TAILLE_CASE), Image.LANCZOS)
         piece_img_promu = sheet.crop((x1, y2, x2, y2*2))
-        piece_img_promu = piece_img.resize((TAILLE_CASE, TAILLE_CASE), Image.LANCZOS)
+        piece_img_promu = piece_img_promu.resize((TAILLE_CASE, TAILLE_CASE), Image.LANCZOS)
 
         photo = ImageTk.PhotoImage(piece_img)
         photo_promu = ImageTk.PhotoImage(piece_img_promu)
@@ -119,21 +119,19 @@ def dessiner_pieces(canvas):
                 cy = (y * TAILLE_CASE)+PADDING_Y
 
                 if joueur == "Sente":
-                    if promu == True:
-                        img == pieces_images_promu_flip[piece]
+                    if promu == True and piece != "金":
+                        img = pieces_images_promu_flip[piece]
                     else:
                         img = pieces_images_flip[piece]
                 else:
-                    if promu == True:
-                        img == pieces_images_promu[piece]
+                    if promu == True and piece != "金":
+                        img = pieces_images_promu[piece]
                     else:
                         img = pieces_images[piece]
                     
                 canvas.create_image(cx, cy, image=img, anchor="nw")
                 canvas.images.append(img)
         
-#mettre l'option de promotion ainsi que l'option de non promotion
-#promotion = ["玉","竜","馬","全","圭","杏","と"]
 def rafraichir(canvas):
     canvas.delete("all")
     image0 = Image.open("fond1.webp")

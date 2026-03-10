@@ -1,8 +1,9 @@
+""""
 import tkinter as tk
 from PIL import Image,ImageTk
 import model 
 root = tk.Tk()
-""""
+##################################################################
 bg_fond = Image.open("fond1.webp")
 bg_test = bg_fond.resize((1900,1000),Image.ANTIALIAS)
 bg_image = ImageTk.PhotoImage(bg_test)
@@ -40,4 +41,48 @@ if promue:
               #  img = pieces_images["と"]
 """
 
+import tkinter as tk
+
+def choix_promotion():
+    # création de la fenêtre secondaire
+    fenetre = tk.Toplevel(root)
+    fenetre.title("Promotion")
+    fenetre.geometry("250x120")
+
+    label = tk.Label(fenetre, text="Voulez-vous promouvoir la pièce ?")
+    label.pack(pady=10)
+
+    bouton_non = tk.Button(
+        fenetre,
+        text="Laisser inchangée",
+        command=lambda: decision(fenetre, False)
+    )
+    bouton_non.pack(pady=5)
+
+    bouton_oui = tk.Button(
+        fenetre,
+        text="Promouvoir",
+        command=lambda: decision(fenetre, True)
+    )
+    bouton_oui.pack(pady=5)
+
+
+def decision(fenetre, promotion):
+    if promotion:
+        print("La pièce est promue")
+        # ici ton code pour transformer la pièce
+    else:
+        print("La pièce reste normale")
+
+    fenetre.destroy()  # ferme la fenêtre
+
+
+# fenêtre principale
+root = tk.Tk()
+root.title("Shogi")
+
+bouton_test = tk.Button(root, text="Tester promotion", command=choix_promotion)
+bouton_test.pack(pady=50)
+
+root.mainloop()
 

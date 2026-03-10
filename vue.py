@@ -16,6 +16,15 @@ pieces_images_flip = {}
 pieces_images_promu = {}
 pieces_images_promu_flip = {}
 
+# Positions des deux petits plateaux de prises (haut: Sente, bas: Gote)
+# Les plateaux décoratifs font 200x200: koi (haut gauche) et tree (bas droite).
+PRISES_HAUT_X = PADDING_X - 190
+PRISES_HAUT_Y = PADDING_Y + 15
+PRISES_BAS_X = (PADDING_X * 2) + 170
+PRISES_BAS_Y = (PADDING_Y * 2) + 345
+PRISES_COLS = 4
+PRISES_CASE = 45
+
 def creer_fenetre():
     root = tk.Tk()
     root.title("Shogi")
@@ -131,6 +140,39 @@ def dessiner_pieces(canvas):
                     
                 canvas.create_image(cx, cy, image=img, anchor="nw")
                 canvas.images.append(img)
+
+    dessiner_prises(canvas)
+
+
+def dessiner_prises(canvas):
+    # Petit plateau du haut: prises du Sente
+    dessiner_liste_prises(canvas, model.priseSente, PRISES_HAUT_X, PRISES_HAUT_Y, "Sente")
+    # Petit plateau du bas: prises du Gote
+    dessiner_liste_prises(canvas, model.priseGote, PRISES_BAS_X, PRISES_BAS_Y, "Gote")
+
+
+def dessiner_liste_prises(canvas, prises, x0, y0, joueur):
+    index = 0
+    for piece, quantite in prises:
+        if quantite <= 0:
+            continue
+
+        col = index % PRISES_COLS
+        lig = index // PRISES_COLS
+        cx = x0 + (col * PRISES_CASE)
+        cy = y0 + (lig * PRISES_CASE)
+
+        if joueur == "Sente":
+            img = pieces_images_flip.get(piece)
+        else:
+            img = pieces_images.get(piece)
+
+        if img is None:
+            continue
+
+        canvas.create_image(cx, cy, image=img, anchor="nw")
+        canvas.images.append(img)
+        index += 1
         
 def rafraichir(canvas):
     canvas.delete("all")

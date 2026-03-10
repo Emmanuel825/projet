@@ -109,7 +109,7 @@ def dessiner_pieces(canvas):
                 canvas.images.append(img)
         
 #mettre l'option de promotion ainsi que l'option de non promotion
-    #promotion = ["玉","竜","馬","全","圭","杏","と"]
+#promotion = ["玉","竜","馬","全","圭","杏","と"]
 def rafraichir(canvas):
     canvas.delete("all")
     canvas.create_image(PADDING_X, PADDING_Y, image=canvas.bg_image,anchor="nw")

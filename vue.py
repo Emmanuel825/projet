@@ -24,6 +24,13 @@ def creer_fenetre():
 
 
     # Fond
+    image0 = Image.open("fond1.webp")
+    image0 = image0.resize((JEU_LARGEUR, 1000), Image.LANCZOS)
+    bg_image0 = ImageTk.PhotoImage(image0)
+
+    canvas.bg_image0 = bg_image0
+    
+    canvas.create_image(0,0, image=bg_image0, anchor="nw")
     image = Image.open("plateau.png")
     image = image.resize((LARGEUR, HAUTEUR), Image.LANCZOS)
     bg_image = ImageTk.PhotoImage(image)

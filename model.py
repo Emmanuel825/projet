@@ -12,26 +12,49 @@ plateau = [
     [["",None, False],["角","Gote", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["飛","Gote", False],["",None, False]],
     [["香","Gote", False],["桂","Gote", False],["銀","Gote", False],["金","Gote", False],["王","Gote", False],["金","Gote", False],["銀","Gote", False],["桂","Gote", False],["香","Gote", False]],
 ]
-priseSente = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",1]]
+priseSente = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
 priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
+indexPara = 0
 
 def getPiece(x, y):
     return plateau[y][x][0]
 
 def getParachutage(piece, joueur):
-    n = 0
     i = 0
+    global indexPara
     if(joueur == "Sente"):
-        while(n <= piece and i < 7):
+        while(indexPara <= piece and i < 7):
             if priseSente[i][1]>0:
-                n+=1
-            if n <= piece:
+                indexPara+=1
+            if indexPara <= piece:
+                i+=1
+        if i < 7:
+            return (priseSente[i][0], "Sente")
+    elif(joueur == "Gote"):
+        while(indexPara <= piece and i < 7):
+            if priseGote[i][1]>0:
+                indexPara+=1
+            if indexPara <= piece:
                 i+=1
         if i < 7:
             print(priseSente[i][0])
+            return (priseSente[i][0], "Gote")
+def parachutage(joueur, x, y, piece):
+    global indexPara
+    # print(piece)
+    plateau[y][x]=[piece, joueur, False]
+    if(joueur == "Gote"):
+        for i in range(7):
+            if priseGote[i][0] == piece:
+                priseGote[i][1]-=1
+    else:
+        for i in range(7):
+            if priseSente[i][0] == piece:
+                priseSente[i][1]-=1
+    indexPara=0
+        
 
 def deplacerPiece(x1, y1, x2, y2):
-    print("p : "+plateau[y1][x1][0]+" "+str(y1)+" "+str(x1))
     reussiteDep = False
     prise = plateau[y2][x2][0]
     if(plateau[y1][x1][1] != plateau[y2][x2][1]):

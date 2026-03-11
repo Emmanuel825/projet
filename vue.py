@@ -16,12 +16,13 @@ pieces_images_flip = {}
 pieces_images_promu = {}
 pieces_images_promu_flip = {}
 
-# Positions des deux petits plateaux de prises (haut: Sente, bas: Gote)
-# Les plateaux décoratifs font 200x200: koi (haut gauche) et tree (bas droite).
-PRISES_HAUT_X = PADDING_X - 190
-PRISES_HAUT_Y = PADDING_Y + 15
-PRISES_BAS_X = (PADDING_X * 2) + 170
-PRISES_BAS_Y = (PADDING_Y * 2) + 345
+
+PRISES_HAUT_X = PADDING_X - 200
+PRISES_HAUT_Y = PADDING_Y
+# PRISES_BAS_X = (PADDING_X * 2) + 170
+PRISES_BAS_X = PADDING_X+LARGEUR
+# PRISES_BAS_Y = (PADDING_Y * 2) + 345
+PRISES_BAS_Y = PADDING_Y+HAUTEUR-200
 PRISES_COLS = 4
 PRISES_CASE = 45
 
@@ -104,14 +105,14 @@ def dessiner_plateau(canvas):
 
     canvas.bg_image2 = bg_image2
     
-    canvas.create_image(PADDING_X-200,PADDING_Y, image=bg_image2, anchor="nw")
+    canvas.create_image(PRISES_HAUT_X,PRISES_HAUT_Y, image=bg_image2, anchor="nw")
     image3 = Image.open("tree.png")
     image3 = image3.resize((200, 200), Image.LANCZOS)
     bg_image3 = ImageTk.PhotoImage(image3)
 
     canvas.bg_image3 = bg_image3
     
-    canvas.create_image(PADDING_X*2+160,PADDING_Y*2+330, image=bg_image3, anchor="nw")
+    canvas.create_image(PRISES_BAS_X,PRISES_BAS_Y, image=bg_image3, anchor="nw")
     
 
 

@@ -12,11 +12,23 @@ plateau = [
     [["",None, False],["角","Gote", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["飛","Gote", False],["",None, False]],
     [["香","Gote", False],["桂","Gote", False],["銀","Gote", False],["金","Gote", False],["王","Gote", False],["金","Gote", False],["銀","Gote", False],["桂","Gote", False],["香","Gote", False]],
 ]
-priseSente = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
+priseSente = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",1]]
 priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
 
 def getPiece(x, y):
     return plateau[y][x][0]
+
+def getParachutage(piece, joueur):
+    n = 0
+    i = 0
+    if(joueur == "Sente"):
+        while(n <= piece and i < 7):
+            if priseSente[i][1]>0:
+                n+=1
+            if n <= piece:
+                i+=1
+        if i < 7:
+            print(priseSente[i][0])
 
 def deplacerPiece(x1, y1, x2, y2):
     print("p : "+plateau[y1][x1][0]+" "+str(y1)+" "+str(x1))

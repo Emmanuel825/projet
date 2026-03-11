@@ -12,8 +12,8 @@ plateau = [
     [["",None, False],["角","Gote", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["飛","Gote", False],["",None, False]],
     [["香","Gote", False],["桂","Gote", False],["銀","Gote", False],["金","Gote", False],["王","Gote", False],["金","Gote", False],["銀","Gote", False],["桂","Gote", False],["香","Gote", False]],
 ]
-priseSente = [["角",1],["飛",1],["金",1],["銀",1],["桂",1],["香",1],["歩",1]]
-priseGote = [["角",1],["飛",0],["金",1],["銀",0],["桂",0],["香",0],["歩",0]]
+priseSente = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
+priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
 
 def getPiece(x, y):
     return plateau[y][x][0]
@@ -21,6 +21,7 @@ def getPiece(x, y):
 def deplacerPiece(x1, y1, x2, y2):
     print("p : "+plateau[y1][x1][0]+" "+str(y1)+" "+str(x1))
     reussiteDep = False
+    prise = plateau[y2][x2][0]
     if(plateau[y1][x1][1] != plateau[y2][x2][1]):
         if(plateau[y1][x1][0]=="歩"):
             reussiteDep = deplacerPion(x1, y1, x2, y2, plateau[y1][x1][1])
@@ -46,9 +47,20 @@ def deplacerPiece(x1, y1, x2, y2):
         if(plateau[y1][x1][0]=="王"):
             reussiteDep = deplacerRoi(x1, y1, x2, y2, plateau[y1][x1][1])
         if reussiteDep == True :
-            if ((plateau[y2][x2][1] == "Gote" and y2 <=2) or (plateau[y2][x2][1] == "Sente" and y2 >=6)):
-                plateau[y2][x2][2]=True
-                print("promu")
+            if ((plateau[y2][x2][1] == "Gote")):
+                if y2 <=2:
+                    plateau[y2][x2][2]=True
+                if prise != "":
+                    for piece in priseGote:
+                        if piece[0]==prise:
+                            piece[1]+=1
+            elif (plateau[y2][x2][1] == "Sente"):
+                if y2 >=6:
+                    plateau[y2][x2][2]=True
+                if prise != "":
+                    for piece in priseSente:
+                        if piece[0] == prise:
+                            piece[1]+=1
         
 def deplacerPion(x1, y1, x2, y2, joueur):
     if(x1 == x2):

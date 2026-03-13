@@ -13,11 +13,24 @@ plateau = [
     [["香","Gote", False],["桂","Gote", False],["銀","Gote", False],["金","Gote", False],["王","Gote", False],["金","Gote", False],["銀","Gote", False],["桂","Gote", False],["香","Gote", False]],
 ]
 priseSente = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
-priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
+priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",1],["香",0],["歩",0]]
 indexPara = 0
 
 def getPiece(x, y):
     return plateau[y][x][0]
+
+def checkParachutage(piece, x, y, joueur):
+    if piece == '香' or piece == "歩":
+        if (joueur == "Sente" and (y+1 >= NB_CASES or plateau[y+1][x][1]=="Sente"))or(joueur=="Gote"and(y-1 < 0 or plateau[y-1][x][1]=="Gote")):
+            return False
+        elif piece == "歩":
+                for i in range(NB_CASES):
+                    if ((joueur == "Sente" and plateau[i][x]==["歩", "Sente", False]) or (joueur == "Gote" and plateau[i][x]==["歩", "Gote", False])) and(i!=y):
+                        return False
+    elif piece == '桂':
+        if (joueur == "Sente" and y+2 >= NB_CASES)or(joueur=="Gote"and y-2 < 0):
+            return False    
+    return True
 
 def getParachutage(piece, joueur):
     i = 0
@@ -37,16 +50,17 @@ def getParachutage(piece, joueur):
             return (prisesDispo[piece], "Gote")
 def parachutage(joueur, x, y, piece):
     global indexPara
-    if plateau[y][x][0]=="":
-        plateau[y][x]=[piece, joueur, False]
-        if(joueur == "Gote"):
-            for i in range(7):
-                if priseGote[i][0] == piece:
-                    priseGote[i][1]-=1
-        else:
-            for i in range(7):
-                if priseSente[i][0] == piece:
-                    priseSente[i][1]-=1
+    if checkParachutage(piece, x, y, joueur):
+        if plateau[y][x][0]=="":
+            plateau[y][x]=[piece, joueur, False]
+            if(joueur == "Gote"):
+                for i in range(7):
+                    if priseGote[i][0] == piece:
+                        priseGote[i][1]-=1
+            else:
+                for i in range(7):
+                    if priseSente[i][0] == piece:
+                        priseSente[i][1]-=1
     indexPara=0
         
 

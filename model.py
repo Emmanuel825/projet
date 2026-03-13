@@ -23,18 +23,17 @@ def getParachutage(piece, joueur):
     i = 0
     global indexPara
     prisesDispo = []
-    print(piece)
     if(joueur == "Sente"):
         for p in priseSente:
             if p[1] > 0:
                 prisesDispo.append(p[0])
-        if piece < 7:
+        if piece < len(prisesDispo):
             return (prisesDispo[piece], "Sente")
     elif(joueur == "Gote"):
         for p in priseGote:
             if p[1] > 0:
                 prisesDispo.append(p[0])
-        if piece < 7:
+        if piece < len(prisesDispo):
             return (prisesDispo[piece], "Gote")
 def parachutage(joueur, x, y, piece):
     global indexPara

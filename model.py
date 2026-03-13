@@ -22,35 +22,32 @@ def getPiece(x, y):
 def getParachutage(piece, joueur):
     i = 0
     global indexPara
+    prisesDispo = []
+    print(piece)
     if(joueur == "Sente"):
-        while(indexPara <= piece and i < 7):
-            if priseSente[i][1]>0:
-                indexPara+=1
-            if indexPara <= piece:
-                i+=1
-        if i < 7:
-            return (priseSente[i][0], "Sente")
+        for p in priseSente:
+            if p[1] > 0:
+                prisesDispo.append(p[0])
+        if piece < 7:
+            return (prisesDispo[piece], "Sente")
     elif(joueur == "Gote"):
-        while(indexPara <= piece and i < 7):
-            if priseGote[i][1]>0:
-                indexPara+=1
-            if indexPara <= piece:
-                i+=1
-        if i < 7:
-            print(priseSente[i][0])
-            return (priseSente[i][0], "Gote")
+        for p in priseGote:
+            if p[1] > 0:
+                prisesDispo.append(p[0])
+        if piece < 7:
+            return (prisesDispo[piece], "Gote")
 def parachutage(joueur, x, y, piece):
     global indexPara
-    # print(piece)
-    plateau[y][x]=[piece, joueur, False]
-    if(joueur == "Gote"):
-        for i in range(7):
-            if priseGote[i][0] == piece:
-                priseGote[i][1]-=1
-    else:
-        for i in range(7):
-            if priseSente[i][0] == piece:
-                priseSente[i][1]-=1
+    if plateau[y][x][0]=="":
+        plateau[y][x]=[piece, joueur, False]
+        if(joueur == "Gote"):
+            for i in range(7):
+                if priseGote[i][0] == piece:
+                    priseGote[i][1]-=1
+        else:
+            for i in range(7):
+                if priseSente[i][0] == piece:
+                    priseSente[i][1]-=1
     indexPara=0
         
 

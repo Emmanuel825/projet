@@ -13,7 +13,7 @@ plateau = [
     [["香","Gote", False],["桂","Gote", False],["銀","Gote", False],["金","Gote", False],["王","Gote", False],["金","Gote", False],["銀","Gote", False],["桂","Gote", False],["香","Gote", False]],
 ]
 priseSente = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
-priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",1],["香",0],["歩",0]]
+priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
 indexPara = 0
 
 def getPiece(x, y):

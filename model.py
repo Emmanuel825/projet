@@ -335,18 +335,18 @@ def checkGeneralor(x1, y1, joueur):
     # plateau[y1][x1] = ("", None, False)
     print("test or")
     if joueur == "Gote":
-        if y1+1 < NB_CASES and plateau[y1+1][x1]!=joueur:
+        if y1+1 < NB_CASES and plateau[y1+1][x1][1]!=joueur:
             check.append((y1+1, x1))
         for i in range(2):
             for j in range(-1, 2):
-                if x1+j >= 0 and x1+j < NB_CASES and y1-i >=0 and y1-i < NB_CASES and plateau[y1-i][x1+j]!=joueur:
+                if x1+j >= 0 and x1+j < NB_CASES and y1-i >=0 and y1-i < NB_CASES and plateau[y1-i][x1+j][1]!=joueur:
                     check.append((y1-i, x1+j))
     if joueur == "Sente":
-        if y1-1 >= 0 and plateau[y1-1][x1]!=joueur:
+        if y1-1 >= 0 and plateau[y1-1][x1][1]!=joueur:
             check.append((y1-1, x1))
         for i in range(2):
             for j in range(-1, 2):
-                if x1+j >= 0 and x1+j < NB_CASES and y1+i >=0 and y1+i < NB_CASES and plateau[y1+i][x1+j]!=joueur:
+                if x1+j >= 0 and x1+j < NB_CASES and y1+i >=0 and y1+i < NB_CASES and plateau[y1+i][x1+j][1]!=joueur:
                     check.append((y1+i, x1+j))
         
     return True

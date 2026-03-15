@@ -366,4 +366,8 @@ def checkRoi(x1, y1, x2, y2, joueur):
     plateau[y1][x1] = ("", None, False)
 
     return True
-     
+
+def arreterJeu():
+    pass
+
+

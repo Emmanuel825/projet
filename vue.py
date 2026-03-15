@@ -53,7 +53,7 @@ def creer_fenetre():
 
     charger_images()
 
-    dessiner_plateau(canvas)
+    dessiner_plateau(canvas, [])
     dessiner_pieces(canvas)
 
     return root, canvas
@@ -95,10 +95,20 @@ def charger_images():
     pieces_images_flip["玉"] = pieces_images_flip["王"]
 
 
-def dessiner_plateau(canvas):
+def dessiner_plateau(canvas, check):
     for i in range(NB_CASES + 1):
         canvas.create_line(PADDING_X, (i * TAILLE_CASE)+PADDING_Y, PADDING_X+LARGEUR, (i * TAILLE_CASE)+PADDING_Y, width=2)
         canvas.create_line((i * TAILLE_CASE)+PADDING_X, PADDING_Y, (i * TAILLE_CASE)+PADDING_X, PADDING_Y+HAUTEUR, width=2)
+    r = (TAILLE_CASE//2)-5
+    for row in range(NB_CASES):
+        for col in range(NB_CASES):
+            cx = PADDING_X + col * TAILLE_CASE + TAILLE_CASE // 2
+            cy = PADDING_Y + row * TAILLE_CASE + TAILLE_CASE // 2
+            if (row, col) in check:
+                if model.plateau[row][col][0]!="":
+                    canvas.create_oval(cx - r, cy - r, cx + r, cy + r, fill="red", outline="")
+                else:
+                    canvas.create_oval(cx - r, cy - r, cx + r, cy + r, fill="green", outline="")
     image2 = Image.open("koi.png")
     image2 = image2.resize((200, 200), Image.LANCZOS)
     bg_image2 = ImageTk.PhotoImage(image2)
@@ -175,7 +185,7 @@ def dessiner_liste_prises(canvas, prises, x0, y0, joueur):
         canvas.images.append(img)
         index += 1
         
-def rafraichir(canvas):
+def rafraichir(canvas, check):
     canvas.delete("all")
     image0 = Image.open("fond1.webp")
     image0 = image0.resize((JEU_LARGEUR, 1000), Image.LANCZOS)
@@ -185,5 +195,5 @@ def rafraichir(canvas):
     
     canvas.create_image(0,0, image=bg_image0, anchor="nw")
     canvas.create_image(PADDING_X, PADDING_Y, image=canvas.bg_image,anchor="nw")
-    dessiner_plateau(canvas)
+    dessiner_plateau(canvas, check)
     dessiner_pieces(canvas)

@@ -17,8 +17,6 @@ priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",
 indexPara = 0
 check = []
 
-def getPiece(x, y):
-    return plateau[y][x][0]
 
 def checkParachutage(piece, x, y, joueur):
     if piece == '香' or piece == "歩":
@@ -64,85 +62,87 @@ def parachutage(joueur, x, y, piece):
                         priseSente[i][1]-=1
     indexPara=0
         
+def getPiece(x1, y1):
+    global check
+    if plateau[y1][x1][2]==False:
+        if(plateau[y1][x1][0]=="歩"):
+            check=[]
+            checkPion(x1, y1, plateau[y1][x1][1])
+            print(check)
+            # reussiteDep = checkFou(x1, y1, x2, y2, plateau[y1][x1][1])
+
+        if(plateau[y1][x1][0]=="香"):
+            check=[]
+            checkLance(x1, y1, plateau[y1][x1][1])
+            print(check)
+            # if (y2,x2) in check:
+            #     plateau[y2][x2]=plateau[y1][x1]
+            #     plateau[y1][x1]=["",None,False]
+            #     reussiteDep=True
+
+        if(plateau[y1][x1][0]=="桂"):
+            check=[]
+            checkCavalier(x1, y1, plateau[y1][x1][1])
+            print(check)
+            # if (y2,x2) in check:
+            #     plateau[y2][x2]=plateau[y1][x1]
+            #     plateau[y1][x1]=["",None,False]
+            #     reussiteDep=True
+
+        if(plateau[y1][x1][0]=="銀"):
+            check=[]
+            checkGeneralargent(x1, y1, plateau[y1][x1][1])
+            print(check)
+            # if (y2,x2) in check:
+            #     plateau[y2][x2]=plateau[y1][x1]
+            #     plateau[y1][x1]=["",None,False]
+            #     reussiteDep=True
+
+
+    if(plateau[y1][x1][0]=="金" or (plateau[y1][x1][2] == True and (plateau[y1][x1]!="飛" and plateau[y1][x1][0]!="角" and plateau[y1][x1]!="王"))):
+        check=[]
+        checkGeneralor(x1, y1, plateau[y1][x1][1])
+        print(check)
+        # if (y2,x2) in check:
+        #     plateau[y2][x2]=plateau[y1][x1]
+        #     plateau[y1][x1]=["",None,False]
+        #     reussiteDep=True
+        #     reussiteDep = True
+
+    # elif(plateau[y1][x1][0]=="王"):
+    #     reussiteDep = checkRoi(x1, y1, x2, y2, plateau[y1][x1][1])
+    
+    elif(plateau[y1][x1][0]=="角"):
+        check=[]
+        checkFou(x1, y1, plateau[y1][x1][1])
+        print(check)
+        # if (y2,x2) in check:
+        #     plateau[y2][x2]=plateau[y1][x1]
+        #     plateau[y1][x1]=["",None,False]
+        #     reussiteDep=True
+
+    if(plateau[y1][x1][0]=="飛"):
+        check=[]
+        checkTour(x1, y1, plateau[y1][x1][1])
+        print(check)
+        # if (y2,x2) in check:
+        #     plateau[y2][x2]=plateau[y1][x1]
+        #     plateau[y1][x1]=["",None,False]
+        #     reussiteDep=True
+    print("check ",check)
+    return (plateau[y1][x1][0], check)
 
 def deplacerPiece(x1, y1, x2, y2):
     reussiteDep = False
     global check
     prise = plateau[y2][x2][0]
     if(plateau[y1][x1][1] != plateau[y2][x2][1]):
-        if plateau[y1][x1][2]==False:
-            if(plateau[y1][x1][0]=="歩"):
-                check=[]
-                checkPion(x1, y1, plateau[y1][x1][1])
-                if (y2,x2) in check:
-                    plateau[y2][x2]=plateau[y1][x1]
-                    plateau[y1][x1]=["",None,False]
-                    reussiteDep=True
 
-                # reussiteDep = checkFou(x1, y1, x2, y2, plateau[y1][x1][1])
+        if (y2,x2) in check:
+            plateau[y2][x2]=plateau[y1][x1]
+            plateau[y1][x1]=["",None,False]
+            reussiteDep=True
 
-
-            if(plateau[y1][x1][0]=="香"):
-                check=[]
-                checkLance(x1, y1, plateau[y1][x1][1])
-                print(check)
-                if (y2,x2) in check:
-                    plateau[y2][x2]=plateau[y1][x1]
-                    plateau[y1][x1]=["",None,False]
-                    reussiteDep=True
-
-            if(plateau[y1][x1][0]=="桂"):
-                check=[]
-                checkCavalier(x1, y1, plateau[y1][x1][1])
-                print(check)
-                if (y2,x2) in check:
-                    plateau[y2][x2]=plateau[y1][x1]
-                    plateau[y1][x1]=["",None,False]
-                    reussiteDep=True
-
-            if(plateau[y1][x1][0]=="銀"):
-                check=[]
-                checkGeneralargent(x1, y1, plateau[y1][x1][1])
-                print(check)
-                if (y2,x2) in check:
-                    plateau[y2][x2]=plateau[y1][x1]
-                    plateau[y1][x1]=["",None,False]
-                    reussiteDep=True
-
-
-        if(plateau[y1][x1][0]=="金" or (plateau[y1][x1][2] == True and (plateau[y1][x1]!="飛" and plateau[y1][x1][0]!="角" and plateau[y1][x1]!="王"))):
-            check=[]
-            print(plateau[y1][x1][0]!="角")
-            print("check promo "+plateau[y1][x1][0])
-            checkGeneralor(x1, y1, plateau[y1][x1][1])
-            print(check)
-            if (y2,x2) in check:
-                plateau[y2][x2]=plateau[y1][x1]
-                plateau[y1][x1]=["",None,False]
-                reussiteDep=True
-                reussiteDep = True
-
-        elif(plateau[y1][x1][0]=="王"):
-            reussiteDep = checkRoi(x1, y1, x2, y2, plateau[y1][x1][1])
-        
-        elif(plateau[y1][x1][0]=="角"):
-            check=[]
-            checkFou(x1, y1, plateau[y1][x1][1])
-            print(check)
-            if (y2,x2) in check:
-                plateau[y2][x2]=plateau[y1][x1]
-                plateau[y1][x1]=["",None,False]
-                reussiteDep=True
-
-        if(plateau[y1][x1][0]=="飛"):
-            check=[]
-            checkTour(x1, y1, plateau[y1][x1][1])
-            print(check)
-            if (y2,x2) in check:
-                plateau[y2][x2]=plateau[y1][x1]
-                plateau[y1][x1]=["",None,False]
-                reussiteDep=True
-                
         if reussiteDep == True :
             if ((plateau[y2][x2][1] == "Gote")):
                 if y2 <=2:

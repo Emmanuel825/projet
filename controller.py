@@ -14,20 +14,22 @@ def clic(event):
         y = (event.y-vue.PADDING_Y) // vue.TAILLE_CASE
         if selection is None:
             if parachutage is None:
-                piece = model.getPiece(x, y)
+                piece, check = model.getPiece(x, y)
                 if piece != "":
                     selection = (x, y)
+                    print(check)
+                    vue.rafraichir(canvas, check)
             else:
                 model.parachutage(parachutage[1], x, y, parachutage[0])
                 selection = None
                 parachutage = None
-                vue.rafraichir(canvas)
+                vue.rafraichir(canvas, [])
 
         else:
             x1, y1 = selection
             model.deplacerPiece(x1, y1, x, y)
             selection = None
-            vue.rafraichir(canvas)
+            vue.rafraichir(canvas, [])
     elif((event.x > vue.PRISES_HAUT_X and event.x < vue.PADDING_X)and(event.y > vue.PRISES_HAUT_Y and event.y < vue.PRISES_HAUT_Y+200)):
         x = event.x - vue.PRISES_HAUT_X
         y = event.y - vue.PRISES_HAUT_Y

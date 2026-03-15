@@ -15,6 +15,7 @@ plateau = [
 priseSente = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
 priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
 indexPara = 0
+check = []
 
 def getPiece(x, y):
     return plateau[y][x][0]
@@ -66,31 +67,82 @@ def parachutage(joueur, x, y, piece):
 
 def deplacerPiece(x1, y1, x2, y2):
     reussiteDep = False
+    global check
     prise = plateau[y2][x2][0]
     if(plateau[y1][x1][1] != plateau[y2][x2][1]):
-        if(plateau[y1][x1][0]=="歩"):
-            reussiteDep = deplacerPion(x1, y1, x2, y2, plateau[y1][x1][1])
+        if plateau[y1][x1][2]==False:
+            if(plateau[y1][x1][0]=="歩"):
+                check=[]
+                checkPion(x1, y1, plateau[y1][x1][1])
+                if (y2,x2) in check:
+                    plateau[y2][x2]=plateau[y1][x1]
+                    plateau[y1][x1]=["",None,False]
+                    reussiteDep=True
 
-        if(plateau[y1][x1][0]=="角"):
-            reussiteDep = deplacerFou(x1, y1, x2, y2, plateau[y1][x1][1])
+                # reussiteDep = checkFou(x1, y1, x2, y2, plateau[y1][x1][1])
+
+
+            if(plateau[y1][x1][0]=="香"):
+                check=[]
+                checkLance(x1, y1, plateau[y1][x1][1])
+                print(check)
+                if (y2,x2) in check:
+                    plateau[y2][x2]=plateau[y1][x1]
+                    plateau[y1][x1]=["",None,False]
+                    reussiteDep=True
+
+            if(plateau[y1][x1][0]=="桂"):
+                check=[]
+                checkCavalier(x1, y1, plateau[y1][x1][1])
+                print(check)
+                if (y2,x2) in check:
+                    plateau[y2][x2]=plateau[y1][x1]
+                    plateau[y1][x1]=["",None,False]
+                    reussiteDep=True
+
+            if(plateau[y1][x1][0]=="銀"):
+                check=[]
+                checkGeneralargent(x1, y1, plateau[y1][x1][1])
+                print(check)
+                if (y2,x2) in check:
+                    plateau[y2][x2]=plateau[y1][x1]
+                    plateau[y1][x1]=["",None,False]
+                    reussiteDep=True
+
+
+        if(plateau[y1][x1][0]=="金" or (plateau[y1][x1][2] == True and (plateau[y1][x1]!="飛" and plateau[y1][x1][0]!="角" and plateau[y1][x1]!="王"))):
+            check=[]
+            print(plateau[y1][x1][0]!="角")
+            print("check promo "+plateau[y1][x1][0])
+            checkGeneralor(x1, y1, plateau[y1][x1][1])
+            print(check)
+            if (y2,x2) in check:
+                plateau[y2][x2]=plateau[y1][x1]
+                plateau[y1][x1]=["",None,False]
+                reussiteDep=True
+                reussiteDep = True
+
+        elif(plateau[y1][x1][0]=="王"):
+            reussiteDep = checkRoi(x1, y1, x2, y2, plateau[y1][x1][1])
+        
+        elif(plateau[y1][x1][0]=="角"):
+            check=[]
+            checkFou(x1, y1, plateau[y1][x1][1])
+            print(check)
+            if (y2,x2) in check:
+                plateau[y2][x2]=plateau[y1][x1]
+                plateau[y1][x1]=["",None,False]
+                reussiteDep=True
 
         if(plateau[y1][x1][0]=="飛"):
-            reussiteDep = deplacerTour(x1, y1, x2, y2, plateau[y1][x1][1])
-
-        if(plateau[y1][x1][0]=="香"):
-            reussiteDep = deplacerLance(x1, y1, x2, y2, plateau[y1][x1][1])
-
-        if(plateau[y1][x1][0]=="桂"):
-            reussiteDep = deplacercavalier(x1, y1, x2, y2, plateau[y1][x1][1])
-
-        if(plateau[y1][x1][0]=="銀"):
-            reussiteDep = deplacerGeneralargent(x1, y1, x2, y2, plateau[y1][x1][1])
-
-        if(plateau[y1][x1][0]=="金" or (plateau[y1][x1][2] == True and (plateau[y1][x1]!="飛" or plateau[y1][x1][0]!="角" or plateau[y1][x1]!="王"))):
-            reussiteDep = deplacerGeneralor(x1, y1, x2, y2, plateau[y1][x1][1])
-
-        if(plateau[y1][x1][0]=="王"):
-            reussiteDep = deplacerRoi(x1, y1, x2, y2, plateau[y1][x1][1])
+            check=[]
+            checkTour(x1, y1, plateau[y1][x1][1])
+            print(check)
+            if (y2,x2) in check:
+                plateau[y2][x2]=plateau[y1][x1]
+                plateau[y1][x1]=["",None,False]
+                reussiteDep=True
+                
         if reussiteDep == True :
             if ((plateau[y2][x2][1] == "Gote")):
                 if y2 <=2:
@@ -107,226 +159,199 @@ def deplacerPiece(x1, y1, x2, y2):
                         if piece[0] == prise:
                             piece[1]+=1
         
-def deplacerPion(x1, y1, x2, y2, joueur):
-    if(x1 == x2):
-        if((y2 == y1+1 and joueur == "Sente")or(y2 == y1-1 and joueur == "Gote")):
-                        plateau[y2][x2] = plateau[y1][x1]
-                        plateau[y1][x1] = ("",None, False)
-    return True
+def checkPion(x1, y1, joueur):
+    global check
+    if((joueur == "Sente" and plateau[y1+1][x1][1]!="Sente")):
+        check.append((y1+1, x1))                       
+        return True
+    elif(joueur == "Gote" and plateau[y1-1][x1][1]!="Gote"):
+        check.append((y1-1, x1))
+        return True
+    return False
 
-def deplacerFou(x1, y1, x2, y2, joueur): 
-    dx = x2 - x1
-    dy = y2 - y1
+def checkFou(x1, y1, joueur): 
+    global check
 
-    # Vérifie diagonale
-    if ((dx != dy)and(dx != -dy)):
-        if(((abs(dx)==1 and abs(dy)==0)or(abs(dx)==0 and abs(dy)==1)) and plateau[y1][x1][2]==True):
-            plateau[y2][x2] = plateau[y1][x1]
-            plateau[y1][x1] = ("", None, False)
-            return True
-        return False
-
-    step_x = 1 if dx > 0 else -1
-    step_y = 1 if dy > 0 else -1
-
-    x = x1 + step_x
-    y = y1 + step_y
-
+    step = 1 
+    x = x1
+    y = y1
     # Vérifie chemin libre
-    while (x, y) != (x2, y2):
-        if plateau[y][x][0] != "":
-            return False
-        x += step_x
-        y += step_y
+    while ((x+step < NB_CASES and y+step < NB_CASES)and(plateau[y+step][x+step][0]=="")):
+        check.append((y+step,x+step))
+        step+=1
+    if((x+step < NB_CASES and y+step < NB_CASES)and((plateau[y+step][x+step][1] == "Sente" and joueur == "Gote")or(plateau[y+step][x+step][1] == "Gote" and joueur == "Sente"))):
+        check.append((y+step,x+step))
+    step = 1
+    while ((x-step >= 0 and y-step >= 0)and(plateau[y-step][x-step][0]=="")):
+        check.append((y-step,x-step))
+        step+=1
+    if((x-step >=0 and y-step >= 0)and((plateau[y-step][x-step][1] == "Sente" and joueur == "Gote")or(plateau[y-step][x-step][1] == "Gote" and joueur == "Sente"))):
+        check.append((y-step,x-step))
+    step = 1
+    while ((x-step >= 0 and y+step < NB_CASES)and(plateau[y+step][x-step][0]=="")):
+        check.append((y+step,x-step))
+        step+=1
+    if((x-step >=0  and y+step <NB_CASES)and((plateau[y+step][x-step][1] == "Sente" and joueur == "Gote")or(plateau[y+step][x-step][1] == "Gote" and joueur == "Sente"))):
+        check.append((y+step,x-step))
+    step = 1
+    while ((x+step < NB_CASES and y-step >= 0)and(plateau[y-step][x+step][0]=="")):
+        check.append((y-step,x+step))
+        step+=1
+    if((x+step < NB_CASES and y-step >= 0)and((plateau[y-step][x+step][1] == "Sente" and joueur == "Gote")or(plateau[y-step][x+step][1] == "Gote" and joueur == "Sente"))):
+        check.append((y-step,x+step))
 
-    # Vérifie capture
-    piece_cible, joueur_cible, _ = plateau[y2][x2]
-    if joueur_cible == joueur:
-        return False
-
-    plateau[y2][x2] = plateau[y1][x1]
-    plateau[y1][x1] = ("", None, False)
+    if plateau[y1][x1][2]:
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                if((x1+i >= 0)and(x1+i < NB_CASES)and(y1+j>=0)and(y1+j<NB_CASES)and(plateau[y1+j][x1+i][1]!=joueur)):
+                    if (y1+j, x1+i) not in check:
+                        check.append((y1+j, x1+i))
     return True
 
-def deplacerTour(x1, y1, x2, y2, joueur):
-    dx = x2 - x1
-    dy = y2 - y1
-    if dx != 0 and dy != 0:
-        if((abs(dx) == 1 and abs(dx)== abs(dy)) and plateau[y1][x1][2]==True):
-            plateau[y2][x2] = plateau[y1][x1]
-            plateau[y1][x1] = ("", None, False)
-            return True
-        return False
+def checkTour(x1, y1, joueur):
+    global check
+    i = y1-1
+    while(i>=0 and plateau[i][x1][0]==""):
+        check.append((i, x1))
+        i-=1
+    if(i>=0)and((joueur == "Sente" and plateau[i][x1][1]=="Gote")or(joueur == "Gote" and plateau[i][x1][1] == "Sente")):
+        check.append((i, x1))
+    i = y1+1
+    while(i<NB_CASES and plateau[i][x1][0]==""):
+        check.append((i, x1))
+        i+=1
+    if(i<NB_CASES)and((joueur == "Sente" and plateau[i][x1][1]=="Gote")or(joueur == "Gote" and plateau[i][x1][1] == "Sente")):
+        check.append((i, x1))
 
-    # Détermine la direction
-    if dx != 0:
-        step_x = 1 if dx > 0 else -1
-        step_y = 0
-    else:
-        step_x = 0
-        step_y = 1 if dy > 0 else -1
-
-    x = x1 + step_x
-    y = y1 + step_y
-
-    # Vérifie que le chemin est libre
-    while (x, y) != (x2, y2):
-        if plateau[y][x][0] != "":
-            return False
-        x += step_x
-        y += step_y
-
-    # Vérifie capture
-    piece_cible, joueur_cible, _ = plateau[y2][x2]
-    if joueur_cible == joueur:
-        return False
-
-    # Déplacement
-    plateau[y2][x2] = plateau[y1][x1]
-    plateau[y1][x1] = ("", None, False)
-
+    i = x1-1
+    while(i>=0 and plateau[y1][i][0]==""):
+        check.append((y1, i))
+        i-=1
+    if(i>=0)and((joueur == "Sente" and plateau[y1][i][1]=="Gote")or(joueur == "Gote" and plateau[y1][i][1] == "Sente")):
+        check.append((y1, i))    
+    i = x1+1
+    while(i<NB_CASES and plateau[y1][i][0]==""):
+        check.append((y1, i))
+        i+=1
+    if(i<NB_CASES)and((joueur == "Sente" and plateau[y1][i][1]=="Gote")or(joueur == "Gote" and plateau[y1][i][1] == "Sente")):
+        check.append((y1, i))    
+    
+    if plateau[y1][x1][2]:
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                if((x1+i >= 0)and(x1+i < NB_CASES)and(y1+j>=0)and(y1+j<NB_CASES)and(plateau[y1+j][x1+i][1]!=joueur)):
+                    if (y1+j, x1+i) not in check:
+                        check.append((y1+j, x1+i))
+        
+    print(check)
     return True
     
-def  deplacerLance(x1, y1, x2, y2, joueur):  
-    dx = x2 - x1
-    dy = y2 - y1
+def  checkLance(x1, y1, joueur):  
+    global check
+    i = y1+1
+    while(i<NB_CASES and plateau[i][x1][0]==""):
+        check.append((i, x1))
+        i+=1
+    if(i<NB_CASES)and((joueur == "Sente" and plateau[i][x1][1]=="Gote")or(joueur == "Gote" and plateau[i][x1][1] == "Sente")):
+        check.append((i, x1))
+    return True
 
-    # La lance ne peut bouger que verticalement
-    if dx != 0:
-        return False
-
-    # Direction selon joueur
-    if joueur == "Gote":
-        if dy >= 0:  # Gote avance vers le haut (dy négatif)
-            return False
-        step_y = -1
-    else:  # blanc
-        if dy <= 0:  # Blanc avance vers le bas (dy positif)
-            return False
-        step_y = 1
-
-    # Vérifie chemin libre
-    y = y1 + step_y
-    while y != y2:
-        if plateau[y][x1][0] != "":
-            return False
-        y += step_y
-
-    # Vérifie capture
-    piece_cible, joueur_cible, _ = plateau[y2][x2]
-    if joueur_cible == joueur:
-        return False
-
-    # Déplacement
-    plateau[y2][x2] = plateau[y1][x1]
-    plateau[y1][x1] = ("", None, False)
+def checkCavalier(x1, y1, joueur):
+    global check
+    if joueur == "Sente" and y1+2 < NB_CASES:
+        if x1-1 >= 0 and plateau[y1+2][x1-1][1]!=joueur:
+            check.append((y1+2, x1-1))
+        if x1+1 < NB_CASES and plateau[y1+2][x1+1][1]!=joueur:
+            check.append((y1+2, x1+1))
+    elif joueur == "Gote":
+        if  y1-2 >= 0:
+            if x1-1 >= 0 and plateau[y1-2][x1-1][1]!=joueur:
+                check.append((y1-2, x1-1))
+            if x1+1 < NB_CASES and plateau[y1-2][x1+1][1]!=joueur:
+                check.append((y1-2, x1+1))
 
     return True
 
-def deplacercavalier(x1, y1, x2, y2, joueur):
-    dx = x2 - x1
-    dy = y2 - y1
-
-    # Déplacement spécifique au cavalier de shogi
+def checkGeneralargent(x1, y1, joueur):  
+    global check
     if joueur == "Gote":
-        # Gote avance vers le haut (dy = -2)
-        if dy != -2 or abs(dx) != 1:
-            return False
-    else:  # blanc
-        # Blanc avance vers le bas (dy = +2)
-        if dy != 2 or abs(dx) != 1:
-            return False
-
-    # Vérifie capture
-    piece_cible, joueur_cible, _ = plateau[y2][x2]
-    if joueur_cible == joueur:
-        return False
-
-    # Déplacement (le cavalier saute, pas besoin de vérifier le chemin)
-    plateau[y2][x2] = plateau[y1][x1]
-    plateau[y1][x1] = ("", None, False)
+        if y1+1 < NB_CASES:
+            if x1-1 >= 0 and plateau[y1+1][x1-1][1]!=joueur:
+                check.append((y1+1, x1-1))
+            if x1+1 < NB_CASES and plateau[y1+1][x1+1][1]!=joueur:
+                check.append((y1+1, x1+1)) 
+        if y1-1 >= 0:
+            for i in range(-1, 2):
+                if x1+i >= 0 and x1+i < NB_CASES and plateau[y1-1][x1+i][1]!=joueur:
+                    check.append((y1-1, x1+i))
+    elif joueur == "Sente":
+        if y1-1 < NB_CASES:
+            if x1-1 >= 0 and plateau[y1-1][x1-1][1]!=joueur:
+                check.append((y1-1, x1-1))
+            if x1+1 < NB_CASES and plateau[y1-1][x1+1][1]!=joueur:
+                check.append((y1-1, x1+1)) 
+        if y1+1 >= 0:
+            for i in range(-1, 2):
+                if x1+i >= 0 and x1+i < NB_CASES and plateau[y1+1][x1+i][1]!=joueur:
+                    check.append((y1+1, x1+i))                       
 
     return True
+def checkGeneralor(x1, y1, joueur):
+    # dx = x2 - x1
+    # dy = y2 - y1
 
-def deplacerGeneralargent(x1, y1, x2, y2, joueur):  
-    dx = x2 - x1
-    dy = y2 - y1
+    # # Une seule case maximum
+    # if abs(dx) > 1 or abs(dy) > 1:
+    #     return False
 
-    # Le général d'argent se déplace d'une seule case
-    if abs(dx) > 1 or abs(dy) > 1:
-        return False
+    # if dx == 0 and dy == 0:
+    #     return False
 
-    # Interdiction de rester sur place
-    if dx == 0 and dy == 0:
-        return False
+    # if joueur == "Gote":
+    #     # Gote avance vers le haut (dy négatif)
+    #     mouvements_valides = [
+    #         (-1, -1), (0, -1), (1, -1),  # avant + diagonales avant
+    #         (-1, 0), (1, 0),             # gauche / droite
+    #         (0, 1)                      # arrière vertical
+    #     ]
+    # else:
+    #     # Blanc avance vers le bas (dy positif)
+    #     mouvements_valides = [
+    #         (-1, 1), (0, 1), (1, 1),     # avant + diagonales avant
+    #         (-1, 0), (1, 0),             # gauche / droite
+    #         (0, -1)                     # arrière vertical
+    #     ]
 
+    # if (dx, dy) not in mouvements_valides:
+    #     return False
+
+    # # Vérifie capture
+    # piece_cible, joueur_cible, _ = plateau[y2][x2]
+    # if joueur_cible == joueur:
+    #     return False
+
+    # # Déplacement
+    # plateau[y2][x2] = plateau[y1][x1]
+    # plateau[y1][x1] = ("", None, False)
+    print("test or")
     if joueur == "Gote":
-        # Gote avance vers le haut (dy négatif)
-        mouvements_valides = [
-            (-1, -1), (0, -1), (1, -1),   # avant + diagonales avant
-            (-1, 1), (1, 1)               # diagonales arrière
-        ]
-    else:
-        # Blanc avance vers le bas (dy positif)
-        mouvements_valides = [
-            (-1, 1), (0, 1), (1, 1),      # avant + diagonales avant
-            (-1, -1), (1, -1)             # diagonales arrière
-        ]
-
-    if (dx, dy) not in mouvements_valides:
-        return False
-
-    # Vérifie capture
-    piece_cible, joueur_cible, _ = plateau[y2][x2]
-    if joueur_cible == joueur:
-        return False
-
-    # Déplacement
-    plateau[y2][x2] = plateau[y1][x1]
-    plateau[y1][x1] = ("", None, False)
-
-    return True
-def deplacerGeneralor(x1, y1, x2, y2, joueur):
-    dx = x2 - x1
-    dy = y2 - y1
-
-    # Une seule case maximum
-    if abs(dx) > 1 or abs(dy) > 1:
-        return False
-
-    if dx == 0 and dy == 0:
-        return False
-
-    if joueur == "Gote":
-        # Gote avance vers le haut (dy négatif)
-        mouvements_valides = [
-            (-1, -1), (0, -1), (1, -1),  # avant + diagonales avant
-            (-1, 0), (1, 0),             # gauche / droite
-            (0, 1)                      # arrière vertical
-        ]
-    else:
-        # Blanc avance vers le bas (dy positif)
-        mouvements_valides = [
-            (-1, 1), (0, 1), (1, 1),     # avant + diagonales avant
-            (-1, 0), (1, 0),             # gauche / droite
-            (0, -1)                     # arrière vertical
-        ]
-
-    if (dx, dy) not in mouvements_valides:
-        return False
-
-    # Vérifie capture
-    piece_cible, joueur_cible, _ = plateau[y2][x2]
-    if joueur_cible == joueur:
-        return False
-
-    # Déplacement
-    plateau[y2][x2] = plateau[y1][x1]
-    plateau[y1][x1] = ("", None, False)
-
+        if y1+1 < NB_CASES and plateau[y1+1][x1]!=joueur:
+            check.append((y1+1, x1))
+        for i in range(2):
+            for j in range(-1, 2):
+                if x1+j >= 0 and x1+j < NB_CASES and y1-i >=0 and y1-i < NB_CASES and plateau[y1-i][x1+j]!=joueur:
+                    check.append((y1-i, x1+j))
+    if joueur == "Sente":
+        if y1-1 >= 0 and plateau[y1-1][x1]!=joueur:
+            check.append((y1-1, x1))
+        for i in range(2):
+            for j in range(-1, 2):
+                if x1+j >= 0 and x1+j < NB_CASES and y1+i >=0 and y1+i < NB_CASES and plateau[y1+i][x1+j]!=joueur:
+                    check.append((y1+i, x1+j))
+        
     return True
 
-def deplacerRoi(x1, y1, x2, y2, joueur):
+def checkRoi(x1, y1, x2, y2, joueur):
     dx = x2 - x1
     dy = y2 - y1
 

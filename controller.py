@@ -17,7 +17,6 @@ def clic(event):
                 piece, check = model.getPiece(x, y)
                 if piece != "":
                     selection = (x, y)
-                    print(check)
                     vue.rafraichir(canvas, check)
             else:
                 model.parachutage(parachutage[1], x, y, parachutage[0])

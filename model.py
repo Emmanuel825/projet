@@ -68,13 +68,11 @@ def getPiece(x1, y1):
         if(plateau[y1][x1][0]=="歩"):
             check=[]
             checkPion(x1, y1, plateau[y1][x1][1])
-            print(check)
             # reussiteDep = checkFou(x1, y1, x2, y2, plateau[y1][x1][1])
 
         if(plateau[y1][x1][0]=="香"):
             check=[]
             checkLance(x1, y1, plateau[y1][x1][1])
-            print(check)
             # if (y2,x2) in check:
             #     plateau[y2][x2]=plateau[y1][x1]
             #     plateau[y1][x1]=["",None,False]
@@ -83,7 +81,6 @@ def getPiece(x1, y1):
         if(plateau[y1][x1][0]=="桂"):
             check=[]
             checkCavalier(x1, y1, plateau[y1][x1][1])
-            print(check)
             # if (y2,x2) in check:
             #     plateau[y2][x2]=plateau[y1][x1]
             #     plateau[y1][x1]=["",None,False]
@@ -92,7 +89,6 @@ def getPiece(x1, y1):
         if(plateau[y1][x1][0]=="銀"):
             check=[]
             checkGeneralargent(x1, y1, plateau[y1][x1][1])
-            print(check)
             # if (y2,x2) in check:
             #     plateau[y2][x2]=plateau[y1][x1]
             #     plateau[y1][x1]=["",None,False]
@@ -102,7 +98,6 @@ def getPiece(x1, y1):
     if(plateau[y1][x1][0]=="金" or (plateau[y1][x1][2] == True and (plateau[y1][x1]!="飛" and plateau[y1][x1][0]!="角" and plateau[y1][x1]!="王"))):
         check=[]
         checkGeneralor(x1, y1, plateau[y1][x1][1])
-        print(check)
         # if (y2,x2) in check:
         #     plateau[y2][x2]=plateau[y1][x1]
         #     plateau[y1][x1]=["",None,False]
@@ -115,7 +110,6 @@ def getPiece(x1, y1):
     elif(plateau[y1][x1][0]=="角"):
         check=[]
         checkFou(x1, y1, plateau[y1][x1][1])
-        print(check)
         # if (y2,x2) in check:
         #     plateau[y2][x2]=plateau[y1][x1]
         #     plateau[y1][x1]=["",None,False]
@@ -124,12 +118,10 @@ def getPiece(x1, y1):
     if(plateau[y1][x1][0]=="飛"):
         check=[]
         checkTour(x1, y1, plateau[y1][x1][1])
-        print(check)
         # if (y2,x2) in check:
         #     plateau[y2][x2]=plateau[y1][x1]
         #     plateau[y1][x1]=["",None,False]
         #     reussiteDep=True
-    print("check ",check)
     return (plateau[y1][x1][0], check)
 
 def deplacerPiece(x1, y1, x2, y2):
@@ -242,18 +234,25 @@ def checkTour(x1, y1, joueur):
                 if((x1+i >= 0)and(x1+i < NB_CASES)and(y1+j>=0)and(y1+j<NB_CASES)and(plateau[y1+j][x1+i][1]!=joueur)):
                     if (y1+j, x1+i) not in check:
                         check.append((y1+j, x1+i))
-        
-    print(check)
     return True
     
 def  checkLance(x1, y1, joueur):  
     global check
-    i = y1+1
-    while(i<NB_CASES and plateau[i][x1][0]==""):
-        check.append((i, x1))
-        i+=1
-    if(i<NB_CASES)and((joueur == "Sente" and plateau[i][x1][1]=="Gote")or(joueur == "Gote" and plateau[i][x1][1] == "Sente")):
-        check.append((i, x1))
+    if joueur == "Sente":
+        i = y1+1
+        while(i<NB_CASES and plateau[i][x1][0]==""):
+            check.append((i, x1))
+            i+=1
+        if(i<NB_CASES)and(plateau[i][x1][1]=="Gote"):
+            check.append((i, x1))
+    else:
+        i = y1-1
+        while(i>=0 and plateau[i][x1][0]==""):
+            check.append((i, x1))
+            i-=1
+        if(i>=0)and(joueur == "Gote" and plateau[i][x1][1] == "Sente"):
+            check.append((i, x1))
+    print(check)
     return True
 
 def checkCavalier(x1, y1, joueur):
@@ -333,7 +332,6 @@ def checkGeneralor(x1, y1, joueur):
     # # Déplacement
     # plateau[y2][x2] = plateau[y1][x1]
     # plateau[y1][x1] = ("", None, False)
-    print("test or")
     if joueur == "Gote":
         if y1+1 < NB_CASES and plateau[y1+1][x1][1]!=joueur:
             check.append((y1+1, x1))

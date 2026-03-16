@@ -334,4 +334,8 @@ def checkRoi(x1, y1, joueur):
             
     check = saveCheck2
     return True
-     
+
+def arreterJeu():
+    pass
+
+

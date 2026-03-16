@@ -108,7 +108,7 @@ def dessiner_plateau(canvas, check):
                 if model.plateau[row][col][0]!="":
                     canvas.create_oval(cx - r, cy - r, cx + r, cy + r, fill="red", outline="")
                 else:
-                    canvas.create_oval(cx - r, cy - r, cx + r, cy + r, fill="green", outline="")
+                    canvas.create_oval(cx - r, cy - r, cx + r, cy + r-5, fill="green", outline="")
     image2 = Image.open("koi.png")
     image2 = image2.resize((200, 200), Image.LANCZOS)
     bg_image2 = ImageTk.PhotoImage(image2)
@@ -197,3 +197,4 @@ def rafraichir(canvas, check):
     canvas.create_image(PADDING_X, PADDING_Y, image=canvas.bg_image,anchor="nw")
     dessiner_plateau(canvas, check)
     dessiner_pieces(canvas)
+

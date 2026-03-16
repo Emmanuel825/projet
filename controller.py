@@ -1,3 +1,4 @@
+import tkinter as tk
 import vue
 import model
 
@@ -45,5 +46,30 @@ def clic(event):
         selection = None
 
 canvas.bind("<Button-1>", clic)
+def reInitialise():
+    global root, canvas 
+    plateau = [
+    [["香","Sente", False],["桂","Sente", False],["銀","Sente", False],["金","Sente", False],["王","Sente", False],["金","Sente", False],["銀","Sente", False],["桂","Sente", False],["香","Sente", False]],
+    [["",None, False],["飛","Sente", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["角","Sente", False],["",None, False]],
+    [["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False]],
+    [["",None, False]]*9,
+    [["",None, False]]*9,
+    [["",None, False]]*9,
+    [["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False]],
+    [["",None, False],["角","Gote", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["飛","Gote", False],["",None, False]],
+    [["香","Gote", False],["桂","Gote", False],["銀","Gote", False],["金","Gote", False],["王","Gote", False],["金","Gote", False],["銀","Gote", False],["桂","Gote", False],["香","Gote", False]],
+    ]
+    priseSente = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
+    priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
+    indexPara = 0
+    check = []
+    selection = None
+    parachutage = None
+
+def reCommence():
+    reInitialise()
+
+rejouer = tk.Button(root, text="Rejouer", command=reCommence)
+rejouer.place(x = 1.2*800, y = 220)
 
 root.mainloop()

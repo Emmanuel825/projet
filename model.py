@@ -12,8 +12,10 @@ plateau = [
     [["",None, False],["角","Gote", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["飛","Gote", False],["",None, False]],
     [["香","Gote", False],["桂","Gote", False],["銀","Gote", False],["金","Gote", False],["王","Gote", False],["金","Gote", False],["銀","Gote", False],["桂","Gote", False],["香","Gote", False]],
 ]
+
 priseSente = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
 priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
+currentPlayer = "Sente"
 indexPara = 0
 check = []
 
@@ -63,71 +65,75 @@ def parachutage(joueur, x, y, piece):
     indexPara=0
         
 def getPiece(x1, y1):
+    global currentPlayer
     global check
-    if plateau[y1][x1][2]==False:
-        if(plateau[y1][x1][0]=="歩"):
-            
-            checkPion(x1, y1, plateau[y1][x1][1])
-            # reussiteDep = checkFou(x1, y1, x2, y2, plateau[y1][x1][1])
+    print(currentPlayer)
+    if currentPlayer == plateau[y1][x1][1]:
+        if plateau[y1][x1][2]==False:
+            if(plateau[y1][x1][0]=="歩"):
+                checkPion(x1, y1, plateau[y1][x1][1])
+                # reussiteDep = checkFou(x1, y1, x2, y2, plateau[y1][x1][1])
 
-        if(plateau[y1][x1][0]=="香"):
+            if(plateau[y1][x1][0]=="香"):
+                
+                checkLance(x1, y1, plateau[y1][x1][1])
+                # if (y2,x2) in check:
+                #     plateau[y2][x2]=plateau[y1][x1]
+                #     plateau[y1][x1]=["",None,False]
+                #     reussiteDep=True
+
+            if(plateau[y1][x1][0]=="桂"):
+                
+                checkCavalier(x1, y1, plateau[y1][x1][1])
+                # if (y2,x2) in check:
+                #     plateau[y2][x2]=plateau[y1][x1]
+                #     plateau[y1][x1]=["",None,False]
+                #     reussiteDep=True
+
+            if(plateau[y1][x1][0]=="銀"):
+                
+                checkGeneralargent(x1, y1, plateau[y1][x1][1])
+                # if (y2,x2) in check:
+                #     plateau[y2][x2]=plateau[y1][x1]
+                #     plateau[y1][x1]=["",None,False]
+                #     reussiteDep=True
+
+
+        if(plateau[y1][x1][0]=="金" or (plateau[y1][x1][2] == True and (plateau[y1][x1]!="飛" and plateau[y1][x1][0]!="角" and plateau[y1][x1]!="王"))):
             
-            checkLance(x1, y1, plateau[y1][x1][1])
+            checkGeneralor(x1, y1, plateau[y1][x1][1])
+            # if (y2,x2) in check:
+            #     plateau[y2][x2]=plateau[y1][x1]
+            #     plateau[y1][x1]=["",None,False]
+            #     reussiteDep=True
+            #     reussiteDep = True
+
+        elif(plateau[y1][x1][0]=="王"):
+            check = []
+            checkRoi(x1, y1, plateau[y1][x1][1])
+        
+        elif(plateau[y1][x1][0]=="角"):
+            
+            checkFou(x1, y1, plateau[y1][x1][1])
             # if (y2,x2) in check:
             #     plateau[y2][x2]=plateau[y1][x1]
             #     plateau[y1][x1]=["",None,False]
             #     reussiteDep=True
 
-        if(plateau[y1][x1][0]=="桂"):
+        if(plateau[y1][x1][0]=="飛"):
             
-            checkCavalier(x1, y1, plateau[y1][x1][1])
+            checkTour(x1, y1, plateau[y1][x1][1])
             # if (y2,x2) in check:
             #     plateau[y2][x2]=plateau[y1][x1]
             #     plateau[y1][x1]=["",None,False]
             #     reussiteDep=True
-
-        if(plateau[y1][x1][0]=="銀"):
-            
-            checkGeneralargent(x1, y1, plateau[y1][x1][1])
-            # if (y2,x2) in check:
-            #     plateau[y2][x2]=plateau[y1][x1]
-            #     plateau[y1][x1]=["",None,False]
-            #     reussiteDep=True
-
-
-    if(plateau[y1][x1][0]=="金" or (plateau[y1][x1][2] == True and (plateau[y1][x1]!="飛" and plateau[y1][x1][0]!="角" and plateau[y1][x1]!="王"))):
-        
-        checkGeneralor(x1, y1, plateau[y1][x1][1])
-        # if (y2,x2) in check:
-        #     plateau[y2][x2]=plateau[y1][x1]
-        #     plateau[y1][x1]=["",None,False]
-        #     reussiteDep=True
-        #     reussiteDep = True
-
-    elif(plateau[y1][x1][0]=="王"):
-        check = []
-        checkRoi(x1, y1, plateau[y1][x1][1])
-    
-    elif(plateau[y1][x1][0]=="角"):
-        
-        checkFou(x1, y1, plateau[y1][x1][1])
-        # if (y2,x2) in check:
-        #     plateau[y2][x2]=plateau[y1][x1]
-        #     plateau[y1][x1]=["",None,False]
-        #     reussiteDep=True
-
-    if(plateau[y1][x1][0]=="飛"):
-        
-        checkTour(x1, y1, plateau[y1][x1][1])
-        # if (y2,x2) in check:
-        #     plateau[y2][x2]=plateau[y1][x1]
-        #     plateau[y1][x1]=["",None,False]
-        #     reussiteDep=True
-    return (plateau[y1][x1][0], check)
+        return (plateau[y1][x1][0], check)
+    return False
 
 def deplacerPiece(x1, y1, x2, y2):
     reussiteDep = False
     global check
+    global currentPlayer
     prise = plateau[y2][x2][0]
     if(plateau[y1][x1][1] != plateau[y2][x2][1]):
 
@@ -151,6 +157,10 @@ def deplacerPiece(x1, y1, x2, y2):
                     for piece in priseSente:
                         if piece[0] == prise:
                             piece[1]+=1
+    if currentPlayer == "Gote":
+        currentPlayer = "Sente"
+    else:
+        currentPlayer = "Gote"
     check = []
         
 def checkPion(x1, y1, joueur):
@@ -339,3 +349,27 @@ def arreterJeu():
     pass
 
 
+def reInitialise():
+    global plateau
+    global priseSente
+    global priseGote
+    global indexPara
+    global check
+    global currentPlayer
+
+    plateau = [
+    [["香","Sente", False],["桂","Sente", False],["銀","Sente", False],["金","Sente", False],["王","Sente", False],["金","Sente", False],["銀","Sente", False],["桂","Sente", False],["香","Sente", False]],
+    [["",None, False],["飛","Sente", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["角","Sente", False],["",None, False]],
+    [["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False]],
+    [["",None, False]]*9,
+    [["",None, False]]*9,
+    [["",None, False]]*9,
+    [["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False]],
+    [["",None, False],["角","Gote", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["飛","Gote", False],["",None, False]],
+    [["香","Gote", False],["桂","Gote", False],["銀","Gote", False],["金","Gote", False],["王","Gote", False],["金","Gote", False],["銀","Gote", False],["桂","Gote", False],["香","Gote", False]],
+    ]
+    priseSente = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
+    priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
+    indexPara = 0
+    check = []
+    currentPlayer = "Sente"

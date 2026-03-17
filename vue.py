@@ -123,6 +123,15 @@ def dessiner_plateau(canvas, check):
     canvas.bg_image3 = bg_image3
     
     canvas.create_image(PRISES_BAS_X,PRISES_BAS_Y, image=bg_image3, anchor="nw")
+    canvas.create_rectangle(PADDING_X, PADDING_Y, PADDING_X+LARGEUR, PADDING_Y+(3*TAILLE_CASE), outline="red")
+    canvas.create_rectangle(PADDING_X, PADDING_Y+HAUTEUR-(3*TAILLE_CASE), PADDING_X+LARGEUR, PADDING_Y+HAUTEUR, outline="blue")
+    playerColor = ""
+    if model.currentPlayer == "Sente":
+        playerColor = "red"
+    else:
+        playerColor = "blue"
+    
+    canvas.create_text(PRISES_HAUT_X, (PADDING_Y+HAUTEUR)/2, text=model.currentPlayer, fill=playerColor, font=("Arial", 32), anchor="nw")
     
 
 

@@ -15,10 +15,12 @@ def clic(event):
         y = (event.y-vue.PADDING_Y) // vue.TAILLE_CASE
         if selection is None:
             if parachutage is None:
-                piece, check = model.getPiece(x, y)
-                if piece != "":
-                    selection = (x, y)
-                    vue.rafraichir(canvas, check)
+                get = model.getPiece(x, y)
+                if get:
+                    piece, check = get
+                    if piece != "":
+                        selection = (x, y)
+                        vue.rafraichir(canvas, check)
             else:
                 model.parachutage(parachutage[1], x, y, parachutage[0])
                 selection = None
@@ -46,31 +48,16 @@ def clic(event):
         selection = None
 
 canvas.bind("<Button-1>", clic)
-def reInitialise():
+
+
+def reCommence():
     global root, canvas 
     global selection
     global parachutage
-    model.plateau = [
-    [["香","Sente", False],["桂","Sente", False],["銀","Sente", False],["金","Sente", False],["王","Sente", False],["金","Sente", False],["銀","Sente", False],["桂","Sente", False],["香","Sente", False]],
-    [["",None, False],["飛","Sente", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["角","Sente", False],["",None, False]],
-    [["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False],["歩","Sente", False]],
-    [["",None, False]]*9,
-    [["",None, False]]*9,
-    [["",None, False]]*9,
-    [["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False],["歩","Gote", False]],
-    [["",None, False],["角","Gote", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["飛","Gote", False],["",None, False]],
-    [["香","Gote", False],["桂","Gote", False],["銀","Gote", False],["金","Gote", False],["王","Gote", False],["金","Gote", False],["銀","Gote", False],["桂","Gote", False],["香","Gote", False]],
-    ]
-    model.priseSente = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
-    model.priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",0]]
-    model.indexPara = 0
-    model.check = []
     selection = None
     parachutage = None
+    model.reInitialise()
     vue.rafraichir(canvas, model.check)
-
-def reCommence():
-    reInitialise()
 
 rejouer = tk.Button(root, text="Rejouer", command=reCommence)
 rejouer.place(x = 1.2*800, y = 220)

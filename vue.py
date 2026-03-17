@@ -125,7 +125,6 @@ def dessiner_plateau(canvas, check):
     canvas.create_image(PRISES_BAS_X,PRISES_BAS_Y, image=bg_image3, anchor="nw")
     
 
-
 def dessiner_pieces(canvas):
     canvas.images = []
     
@@ -138,9 +137,28 @@ def dessiner_pieces(canvas):
                 cx = (x * TAILLE_CASE)+PADDING_X
                 cy = (y * TAILLE_CASE)+PADDING_Y
 
-                if joueur == "Sente":
+                if joueur == "Sente" :
+
                     if promu == True and piece != "金":
-                        img = pieces_images_promu_flip[piece]
+                       fenetre = tk.Toplevel()
+                       fenetre.title("Promotion")
+                       fenetre.geometry("250x120")
+
+                       label = tk.Label(fenetre, text="Voulez-vous promouvoir la pièce ?")
+                       label.pack(pady=10)
+                       bouton_non = tk.Button(
+                       fenetre,
+                       image=pieces_images_promu_flip[piece],
+                       command=lambda: (fenetre, True)
+                       )
+                       bouton_non.pack(side=tk.LEFT)
+                       bouton_oui = tk.Button(
+                       fenetre,
+                       image= pieces_images_flip[piece],
+                       command=lambda: (fenetre, False)
+                       )
+                       bouton_oui.pack(side=tk.RIGHT)
+                       img = pieces_images_promu_flip[piece]
                     else:
                         img = pieces_images_flip[piece]
                 else:

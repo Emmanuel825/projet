@@ -109,6 +109,12 @@ def dessiner_plateau(canvas, check):
                     canvas.create_oval(cx - r, cy - r, cx + r, cy + r, fill="red", outline="")
                 else:
                     canvas.create_oval(cx - r, cy - r, cx + r, cy + r-5, fill="green", outline="")
+
+    if model.echec[0] and model.echec_attaquant is not None:
+        att_row, att_col = model.echec_attaquant
+        cx = PADDING_X + att_col * TAILLE_CASE + TAILLE_CASE // 2
+        cy = PADDING_Y + att_row * TAILLE_CASE + TAILLE_CASE // 2
+        canvas.create_oval(cx - r, cy - r, cx + r, cy + r, fill="red", outline="")
     image2 = Image.open("koi.png")
     image2 = image2.resize((200, 200), Image.LANCZOS)
     bg_image2 = ImageTk.PhotoImage(image2)
@@ -132,6 +138,23 @@ def dessiner_plateau(canvas, check):
         playerColor = "blue"
     
     canvas.create_text(PRISES_HAUT_X, (PADDING_Y+HAUTEUR)/2, text=model.currentPlayer, fill=playerColor, font=("Arial", 32), anchor="nw")
+    if model.mat[0] and model.dernierJoueur != "":
+        canvas.create_text(
+            PRISES_HAUT_X,
+            (PADDING_Y+HAUTEUR)/2 + 45,
+            text=model.dernierJoueur,
+            fill="black",
+            font=("Arial", 24),
+            anchor="nw"
+        )
+        canvas.create_text(
+            PRISES_HAUT_X,
+            (PADDING_Y+HAUTEUR)/2 + 80,
+            text="défaite",
+            fill="red",
+            font=("Arial", 28, "bold"),
+            anchor="nw"
+        )
     
 
 def dessiner_pieces(canvas):

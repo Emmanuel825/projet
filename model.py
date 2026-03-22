@@ -1,6 +1,5 @@
 NB_CASES = 9
 
-#ajout du champ "promu" dans les tuples de la liste
 plateau = [
     [["香","Sente", False],["桂","Sente", False],["銀","Sente", False],["金","Sente", False],["王","Sente", False],["金","Sente", False],["銀","Sente", False],["桂","Sente", False],["香","Sente", False]],
     [["",None, False],["飛","Sente", False],["",None, False],["",None, False],["",None, False],["",None, False],["",None, False],["角","Sente", False],["",None, False]],
@@ -18,6 +17,99 @@ priseGote = [["角",0],["飛",0],["金",0],["銀",0],["桂",0],["香",0],["歩",
 currentPlayer = "Sente"
 indexPara = 0
 check = []
+echec = [False, ""]
+mat = [False, ""]
+echec_attaquant = None
+dernierJoueur = ""
+
+
+def _adversaire(joueur):
+    if joueur == "Sente":
+        return "Gote"
+    return "Sente"
+
+
+def _find_roi(joueur):
+    for y in range(NB_CASES):
+        for x in range(NB_CASES):
+            if plateau[y][x][0] == "王" and plateau[y][x][1] == joueur:
+                return (x, y)
+    return None
+
+
+def _piece_moves(x, y):
+    global check
+    piece, joueur, _ = plateau[y][x]
+    if piece == "":
+        return []
+
+    save_check = check
+    check = []
+
+    if plateau[y][x][2] == False:
+        if piece == "歩":
+            checkPion(x, y, joueur)
+        elif piece == "香":
+            checkLance(x, y, joueur)
+        elif piece == "桂":
+            checkCavalier(x, y, joueur)
+        elif piece == "銀":
+            checkGeneralargent(x, y, joueur)
+
+    if piece == "金" or (plateau[y][x][2] == True and piece != "飛" and piece != "角" and piece != "王"):
+        checkGeneralor(x, y, joueur)
+    elif piece == "王":
+        checkRoi(x, y, joueur)
+    elif piece == "角":
+        checkFou(x, y, joueur)
+
+    if piece == "飛":
+        checkTour(x, y, joueur)
+
+    moves = list(check)
+    check = save_check
+    return moves
+
+
+def _roi_en_echec(joueur):
+    roi = _find_roi(joueur)
+    if roi is None:
+        return (False, None)
+
+    roi_x, roi_y = roi
+    attaquant = _adversaire(joueur)
+
+    for y in range(NB_CASES):
+        for x in range(NB_CASES):
+            if plateau[y][x][1] == attaquant:
+                moves = _piece_moves(x, y)
+                if (roi_y, roi_x) in moves:
+                    return (True, (y, x))
+    return (False, None)
+
+
+def _a_un_coup_de_sauvetage(joueur):
+    for y1 in range(NB_CASES):
+        for x1 in range(NB_CASES):
+            if plateau[y1][x1][1] != joueur:
+                continue
+
+            moves = _piece_moves(x1, y1)
+            for y2, x2 in moves:
+                source = plateau[y1][x1]
+                cible = plateau[y2][x2]
+
+                plateau[y2][x2] = source
+                plateau[y1][x1] = ["", None, False]
+
+                en_echec, _ = _roi_en_echec(joueur)
+
+                plateau[y1][x1] = source
+                plateau[y2][x2] = cible
+
+                if not en_echec:
+                    return True
+    return False
 
 
 def checkParachutage(piece, x, y, joueur):
@@ -51,9 +143,16 @@ def getParachutage(piece, joueur):
             return (prisesDispo[piece], "Gote")
 def parachutage(joueur, x, y, piece):
     global indexPara
+    global currentPlayer
+    global dernierJoueur
     if checkParachutage(piece, x, y, joueur):
         if plateau[y][x][0]=="":
             plateau[y][x]=[piece, joueur, False]
+            en_echec_apres, _ = _roi_en_echec(joueur)
+            if en_echec_apres:
+                plateau[y][x]=["",None,False]
+                indexPara=0
+                return
             if(joueur == "Gote"):
                 for i in range(7):
                     if priseGote[i][0] == piece:
@@ -62,85 +161,99 @@ def parachutage(joueur, x, y, piece):
                 for i in range(7):
                     if priseSente[i][0] == piece:
                         priseSente[i][1]-=1
+            dernierJoueur = joueur
+            currentPlayer = _adversaire(joueur)
+            verifEchecMat(currentPlayer)
     indexPara=0
         
-def getPiece(x1, y1):
+def getPiece(x, y):
     global currentPlayer
     global check
     print(currentPlayer)
-    if currentPlayer == plateau[y1][x1][1]:
-        if plateau[y1][x1][2]==False:
-            if(plateau[y1][x1][0]=="歩"):
-                checkPion(x1, y1, plateau[y1][x1][1])
-                # reussiteDep = checkFou(x1, y1, x2, y2, plateau[y1][x1][1])
+    if currentPlayer == plateau[y][x][1]:
+        if plateau[y][x][2]==False:
+            if(plateau[y][x][0]=="歩"):
+                checkPion(x, y, plateau[y][x][1])
+                # reussiteDep = checkFou(x, y, x2, y2, plateau[y][x][1])
 
-            if(plateau[y1][x1][0]=="香"):
+            if(plateau[y][x][0]=="香"):
                 
-                checkLance(x1, y1, plateau[y1][x1][1])
+                checkLance(x, y, plateau[y][x][1])
                 # if (y2,x2) in check:
-                #     plateau[y2][x2]=plateau[y1][x1]
-                #     plateau[y1][x1]=["",None,False]
+                #     plateau[y2][x2]=plateau[y][x]
+                #     plateau[y][x]=["",None,False]
                 #     reussiteDep=True
 
-            if(plateau[y1][x1][0]=="桂"):
+            if(plateau[y][x][0]=="桂"):
                 
-                checkCavalier(x1, y1, plateau[y1][x1][1])
+                checkCavalier(x, y, plateau[y][x][1])
                 # if (y2,x2) in check:
-                #     plateau[y2][x2]=plateau[y1][x1]
-                #     plateau[y1][x1]=["",None,False]
+                #     plateau[y2][x2]=plateau[y][x]
+                #     plateau[y][x]=["",None,False]
                 #     reussiteDep=True
 
-            if(plateau[y1][x1][0]=="銀"):
+            if(plateau[y][x][0]=="銀"):
                 
-                checkGeneralargent(x1, y1, plateau[y1][x1][1])
+                checkGeneralargent(x, y, plateau[y][x][1])
                 # if (y2,x2) in check:
-                #     plateau[y2][x2]=plateau[y1][x1]
-                #     plateau[y1][x1]=["",None,False]
+                #     plateau[y2][x2]=plateau[y][x]
+                #     plateau[y][x]=["",None,False]
                 #     reussiteDep=True
 
 
-        if(plateau[y1][x1][0]=="金" or (plateau[y1][x1][2] == True and (plateau[y1][x1]!="飛" and plateau[y1][x1][0]!="角" and plateau[y1][x1]!="王"))):
+        if(plateau[y][x][0]=="金" or (plateau[y][x][2] == True and (plateau[y][x]!="飛" and plateau[y][x][0]!="角" and plateau[y][x]!="王"))):
             
-            checkGeneralor(x1, y1, plateau[y1][x1][1])
+            checkGeneralor(x, y, plateau[y][x][1])
             # if (y2,x2) in check:
-            #     plateau[y2][x2]=plateau[y1][x1]
-            #     plateau[y1][x1]=["",None,False]
+            #     plateau[y2][x2]=plateau[y][x]
+            #     plateau[y][x]=["",None,False]
             #     reussiteDep=True
             #     reussiteDep = True
 
-        elif(plateau[y1][x1][0]=="王"):
+        elif(plateau[y][x][0]=="王"):
             check = []
-            checkRoi(x1, y1, plateau[y1][x1][1])
+            checkRoi(x, y, plateau[y][x][1])
         
-        elif(plateau[y1][x1][0]=="角"):
+        elif(plateau[y][x][0]=="角"):
             
-            checkFou(x1, y1, plateau[y1][x1][1])
+            checkFou(x, y, plateau[y][x][1])
             # if (y2,x2) in check:
-            #     plateau[y2][x2]=plateau[y1][x1]
-            #     plateau[y1][x1]=["",None,False]
+            #     plateau[y2][x2]=plateau[y][x]
+            #     plateau[y][x]=["",None,False]
             #     reussiteDep=True
 
-        if(plateau[y1][x1][0]=="飛"):
+        if(plateau[y][x][0]=="飛"):
             
-            checkTour(x1, y1, plateau[y1][x1][1])
+            checkTour(x, y, plateau[y][x][1])
             # if (y2,x2) in check:
-            #     plateau[y2][x2]=plateau[y1][x1]
-            #     plateau[y1][x1]=["",None,False]
+            #     plateau[y2][x2]=plateau[y][x]
+            #     plateau[y][x]=["",None,False]
             #     reussiteDep=True
-        return (plateau[y1][x1][0], check)
+        return (plateau[y][x][0], check)
     return False
 
 def deplacerPiece(x1, y1, x2, y2):
     reussiteDep = False
     global check
     global currentPlayer
+    global dernierJoueur
     prise = plateau[y2][x2][0]
     if(plateau[y1][x1][1] != plateau[y2][x2][1]):
 
         if (y2,x2) in check:
-            plateau[y2][x2]=plateau[y1][x1]
+            joueur = plateau[y1][x1][1]
+            source = plateau[y1][x1]
+            cible = plateau[y2][x2]
+
+            plateau[y2][x2]=source
             plateau[y1][x1]=["",None,False]
-            reussiteDep=True
+
+            en_echec_apres, _ = _roi_en_echec(joueur)
+            if en_echec_apres:
+                plateau[y1][x1]=source
+                plateau[y2][x2]=cible
+            else:
+                reussiteDep=True
 
         if reussiteDep == True :
             if ((plateau[y2][x2][1] == "Gote")):
@@ -157,28 +270,28 @@ def deplacerPiece(x1, y1, x2, y2):
                     for piece in priseSente:
                         if piece[0] == prise:
                             piece[1]+=1
-    if currentPlayer == "Gote":
-        currentPlayer = "Sente"
-    else:
-        currentPlayer = "Gote"
+    if reussiteDep:
+        dernierJoueur = plateau[y2][x2][1]
+        currentPlayer = _adversaire(currentPlayer)
+        verifEchecMat(currentPlayer)
     check = []
         
-def checkPion(x1, y1, joueur):
+def checkPion(x, y, joueur):
     global check
-    if((joueur == "Sente" and plateau[y1+1][x1][1]!="Sente")):
-        check.append((y1+1, x1))                       
+    if((joueur == "Sente" and plateau[y+1][x][1]!="Sente")):
+        check.append((y+1, x))                       
         return True
-    elif(joueur == "Gote" and plateau[y1-1][x1][1]!="Gote"):
-        check.append((y1-1, x1))
+    elif(joueur == "Gote" and plateau[y-1][x][1]!="Gote"):
+        check.append((y-1, x))
         return True
     return False
 
-def checkFou(x1, y1, joueur): 
+def checkFou(x, y, joueur): 
     global check
 
     step = 1 
-    x = x1
-    y = y1
+    x = x
+    y = y
     # Vérifie chemin libre
     while ((x+step < NB_CASES and y+step < NB_CASES)and(plateau[y+step][x+step][0]=="")):
         check.append((y+step,x+step))
@@ -204,142 +317,147 @@ def checkFou(x1, y1, joueur):
     if((x+step < NB_CASES and y-step >= 0)and((plateau[y-step][x+step][1] == "Sente" and joueur == "Gote")or(plateau[y-step][x+step][1] == "Gote" and joueur == "Sente"))):
         check.append((y-step,x+step))
 
-    if plateau[y1][x1][2]:
+    if plateau[y][x][2]:
         for i in range(-1, 2):
             for j in range(-1, 2):
-                if((x1+i >= 0)and(x1+i < NB_CASES)and(y1+j>=0)and(y1+j<NB_CASES)and(plateau[y1+j][x1+i][1]!=joueur)):
-                    if (y1+j, x1+i) not in check:
-                        check.append((y1+j, x1+i))
+                if((x+i >= 0)and(x+i < NB_CASES)and(y+j>=0)and(y+j<NB_CASES)and(plateau[y+j][x+i][1]!=joueur)):
+                    if (y+j, x+i) not in check:
+                        check.append((y+j, x+i))
     return True
 
-def checkTour(x1, y1, joueur):
+def checkTour(x, y, joueur):
     global check
-    i = y1-1
-    while(i>=0 and plateau[i][x1][0]==""):
-        check.append((i, x1))
+    i = y-1
+    while(i>=0 and plateau[i][x][0]==""):
+        check.append((i, x))
         i-=1
-    if(i>=0)and((joueur == "Sente" and plateau[i][x1][1]=="Gote")or(joueur == "Gote" and plateau[i][x1][1] == "Sente")):
-        check.append((i, x1))
-    i = y1+1
-    while(i<NB_CASES and plateau[i][x1][0]==""):
-        check.append((i, x1))
+    if(i>=0)and((joueur == "Sente" and plateau[i][x][1]=="Gote")or(joueur == "Gote" and plateau[i][x][1] == "Sente")):
+        check.append((i, x))
+    i = y+1
+    while(i<NB_CASES and plateau[i][x][0]==""):
+        check.append((i, x))
         i+=1
-    if(i<NB_CASES)and((joueur == "Sente" and plateau[i][x1][1]=="Gote")or(joueur == "Gote" and plateau[i][x1][1] == "Sente")):
-        check.append((i, x1))
+    if(i<NB_CASES)and((joueur == "Sente" and plateau[i][x][1]=="Gote")or(joueur == "Gote" and plateau[i][x][1] == "Sente")):
+        check.append((i, x))
 
-    i = x1-1
-    while(i>=0 and plateau[y1][i][0]==""):
-        check.append((y1, i))
+    i = x-1
+    while(i>=0 and plateau[y][i][0]==""):
+        check.append((y, i))
         i-=1
-    if(i>=0)and((joueur == "Sente" and plateau[y1][i][1]=="Gote")or(joueur == "Gote" and plateau[y1][i][1] == "Sente")):
-        check.append((y1, i))    
-    i = x1+1
-    while(i<NB_CASES and plateau[y1][i][0]==""):
-        check.append((y1, i))
+    if(i>=0)and((joueur == "Sente" and plateau[y][i][1]=="Gote")or(joueur == "Gote" and plateau[y][i][1] == "Sente")):
+        check.append((y, i))    
+    i = x+1
+    while(i<NB_CASES and plateau[y][i][0]==""):
+        check.append((y, i))
         i+=1
-    if(i<NB_CASES)and((joueur == "Sente" and plateau[y1][i][1]=="Gote")or(joueur == "Gote" and plateau[y1][i][1] == "Sente")):
-        check.append((y1, i))    
+    if(i<NB_CASES)and((joueur == "Sente" and plateau[y][i][1]=="Gote")or(joueur == "Gote" and plateau[y][i][1] == "Sente")):
+        check.append((y, i))    
     
-    if plateau[y1][x1][2]:
+    if plateau[y][x][2]:
         for i in range(-1, 2):
             for j in range(-1, 2):
-                if((x1+i >= 0)and(x1+i < NB_CASES)and(y1+j>=0)and(y1+j<NB_CASES)and(plateau[y1+j][x1+i][1]!=joueur)):
-                    if (y1+j, x1+i) not in check:
-                        check.append((y1+j, x1+i))
+                if((x+i >= 0)and(x+i < NB_CASES)and(y+j>=0)and(y+j<NB_CASES)and(plateau[y+j][x+i][1]!=joueur)):
+                    if (y+j, x+i) not in check:
+                        check.append((y+j, x+i))
     return True
     
-def  checkLance(x1, y1, joueur):  
+def  checkLance(x, y, joueur):  
     global check
     if joueur == "Sente":
-        i = y1+1
-        while(i<NB_CASES and plateau[i][x1][0]==""):
-            check.append((i, x1))
+        i = y+1
+        while(i<NB_CASES and plateau[i][x][0]==""):
+            check.append((i, x))
             i+=1
-        if(i<NB_CASES)and(plateau[i][x1][1]=="Gote"):
-            check.append((i, x1))
+        if(i<NB_CASES)and(plateau[i][x][1]=="Gote"):
+            check.append((i, x))
     else:
-        i = y1-1
-        while(i>=0 and plateau[i][x1][0]==""):
-            check.append((i, x1))
+        i = y-1
+        while(i>=0 and plateau[i][x][0]==""):
+            check.append((i, x))
             i-=1
-        if(i>=0)and(joueur == "Gote" and plateau[i][x1][1] == "Sente"):
-            check.append((i, x1))
+        if(i>=0)and(joueur == "Gote" and plateau[i][x][1] == "Sente"):
+            check.append((i, x))
     print(check)
     return True
 
-def checkCavalier(x1, y1, joueur):
+def checkCavalier(x, y, joueur):
     global check
-    if joueur == "Sente" and y1+2 < NB_CASES:
-        if x1-1 >= 0 and plateau[y1+2][x1-1][1]!=joueur:
-            check.append((y1+2, x1-1))
-        if x1+1 < NB_CASES and plateau[y1+2][x1+1][1]!=joueur:
-            check.append((y1+2, x1+1))
+    if joueur == "Sente" and y+2 < NB_CASES:
+        if x-1 >= 0 and plateau[y+2][x-1][1]!=joueur:
+            check.append((y+2, x-1))
+        if x+1 < NB_CASES and plateau[y+2][x+1][1]!=joueur:
+            check.append((y+2, x+1))
     elif joueur == "Gote":
-        if  y1-2 >= 0:
-            if x1-1 >= 0 and plateau[y1-2][x1-1][1]!=joueur:
-                check.append((y1-2, x1-1))
-            if x1+1 < NB_CASES and plateau[y1-2][x1+1][1]!=joueur:
-                check.append((y1-2, x1+1))
+        if  y-2 >= 0:
+            if x-1 >= 0 and plateau[y-2][x-1][1]!=joueur:
+                check.append((y-2, x-1))
+            if x+1 < NB_CASES and plateau[y-2][x+1][1]!=joueur:
+                check.append((y-2, x+1))
 
     return True
 
-def checkGeneralargent(x1, y1, joueur):  
+def checkGeneralargent(x, y, joueur):  
     global check
     if joueur == "Gote":
-        if y1+1 < NB_CASES:
-            if x1-1 >= 0 and plateau[y1+1][x1-1][1]!=joueur:
-                check.append((y1+1, x1-1))
-            if x1+1 < NB_CASES and plateau[y1+1][x1+1][1]!=joueur:
-                check.append((y1+1, x1+1)) 
-        if y1-1 >= 0:
+        if y+1 < NB_CASES:
+            if x-1 >= 0 and plateau[y+1][x-1][1]!=joueur:
+                check.append((y+1, x-1))
+            if x+1 < NB_CASES and plateau[y+1][x+1][1]!=joueur:
+                check.append((y+1, x+1)) 
+        if y-1 >= 0:
             for i in range(-1, 2):
-                if x1+i >= 0 and x1+i < NB_CASES and plateau[y1-1][x1+i][1]!=joueur:
-                    check.append((y1-1, x1+i))
+                if x+i >= 0 and x+i < NB_CASES and plateau[y-1][x+i][1]!=joueur:
+                    check.append((y-1, x+i))
     elif joueur == "Sente":
-        if y1-1 < NB_CASES:
-            if x1-1 >= 0 and plateau[y1-1][x1-1][1]!=joueur:
-                check.append((y1-1, x1-1))
-            if x1+1 < NB_CASES and plateau[y1-1][x1+1][1]!=joueur:
-                check.append((y1-1, x1+1)) 
-        if y1+1 >= 0:
+        if y-1 < NB_CASES:
+            if x-1 >= 0 and plateau[y-1][x-1][1]!=joueur:
+                check.append((y-1, x-1))
+            if x+1 < NB_CASES and plateau[y-1][x+1][1]!=joueur:
+                check.append((y-1, x+1)) 
+        if y+1 >= 0:
             for i in range(-1, 2):
-                if x1+i >= 0 and x1+i < NB_CASES and plateau[y1+1][x1+i][1]!=joueur:
-                    check.append((y1+1, x1+i))                       
+                if x+i >= 0 and x+i < NB_CASES and plateau[y+1][x+i][1]!=joueur:
+                    check.append((y+1, x+i))                       
 
     return True
-def checkGeneralor(x1, y1, joueur):
+def checkGeneralor(x, y, joueur):
     if joueur == "Gote":
-        if y1+1 < NB_CASES and plateau[y1+1][x1][1]!=joueur:
-            check.append((y1+1, x1))
+        if y+1 < NB_CASES and plateau[y+1][x][1]!=joueur:
+            check.append((y+1, x))
         for i in range(2):
             for j in range(-1, 2):
-                if x1+j >= 0 and x1+j < NB_CASES and y1-i >=0 and y1-i < NB_CASES and plateau[y1-i][x1+j][1]!=joueur:
-                    check.append((y1-i, x1+j))
+                if x+j >= 0 and x+j < NB_CASES and y-i >=0 and y-i < NB_CASES and plateau[y-i][x+j][1]!=joueur:
+                    check.append((y-i, x+j))
     if joueur == "Sente":
-        if y1-1 >= 0 and plateau[y1-1][x1][1]!=joueur:
-            check.append((y1-1, x1))
+        if y-1 >= 0 and plateau[y-1][x][1]!=joueur:
+            check.append((y-1, x))
         for i in range(2):
             for j in range(-1, 2):
-                if x1+j >= 0 and x1+j < NB_CASES and y1+i >=0 and y1+i < NB_CASES and plateau[y1+i][x1+j][1]!=joueur:
-                    check.append((y1+i, x1+j))
+                if x+j >= 0 and x+j < NB_CASES and y+i >=0 and y+i < NB_CASES and plateau[y+i][x+j][1]!=joueur:
+                    check.append((y+i, x+j))
         
     return True
 
-def checkRoi(x1, y1, joueur):
+def checkRoi(x, y, joueur):
     global check
     saveCheck = []
     saveCheck2 = []
+    cases_attaquees = []
     for i in range(-1, 2):
         for j in range(-1, 2):
-            if((x1+i >= 0)and(x1+i < NB_CASES)and(y1+j>=0)and(y1+j<NB_CASES)and(plateau[y1+j][x1+i][1]!=joueur)):
-                if (y1+j, x1+i) not in saveCheck:
-                    saveCheck.append((y1+j, x1+i))
+            if((x+i >= 0)and(x+i < NB_CASES)and(y+j>=0)and(y+j<NB_CASES)and(plateau[y+j][x+i][1]!=joueur)):
+                if (y+j, x+i) not in saveCheck:
+                    saveCheck.append((y+j, x+i))
     for i in range(NB_CASES):
         for j in range(NB_CASES):
             if(plateau[i][j][1]!=joueur and plateau[i][j][0]!="" and plateau[i][j][0]!="王"):
-                getPiece(j, i)
+                cases_attaquees.extend(_piece_moves(j, i))
+
+    # On filtre les doublons pour des comparaisons stables
+    cases_attaquees = list(dict.fromkeys(cases_attaquees))
+
     for k in saveCheck:
-        if k not in check:
+        if k not in cases_attaquees:
             saveCheck2.append(k)
             
     check = saveCheck2
@@ -349,13 +467,17 @@ def arreterJeu():
     pass
 
 
-def reInitialise():
+def reinitialise():
     global plateau
     global priseSente
     global priseGote
     global indexPara
     global check
     global currentPlayer
+    global echec
+    global mat
+    global echec_attaquant
+    global dernierJoueur
 
     plateau = [
     [["香","Sente", False],["桂","Sente", False],["銀","Sente", False],["金","Sente", False],["王","Sente", False],["金","Sente", False],["銀","Sente", False],["桂","Sente", False],["香","Sente", False]],
@@ -373,3 +495,27 @@ def reInitialise():
     indexPara = 0
     check = []
     currentPlayer = "Sente"
+    echec = [False, ""]
+    mat = [False, ""]
+    echec_attaquant = None
+    dernierJoueur = ""
+
+def verifEchecMat(joueur):
+    global echec
+    global mat
+    global echec_attaquant
+
+    mat[0] = False
+    mat[1] = ""
+
+    en_echec, attaquant = _roi_en_echec(joueur)
+    echec[0] = en_echec
+    echec[1] = joueur if en_echec else ""
+    echec_attaquant = attaquant
+
+    if not en_echec:
+        return
+
+    if not _a_un_coup_de_sauvetage(joueur):
+        mat[0] = True
+        mat[1] = joueur

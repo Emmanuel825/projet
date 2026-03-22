@@ -21,6 +21,7 @@ echec = [False, ""]
 mat = [False, ""]
 echec_attaquant = None
 dernierJoueur = ""
+promotion_en_attente = None
 
 
 def _adversaire(joueur):
@@ -109,6 +110,18 @@ def _a_un_coup_de_sauvetage(joueur):
 
                 if not en_echec:
                     return True
+    return False
+
+
+def _peut_promouvoir(piece):
+    return piece in ["歩", "香", "桂", "銀", "角", "飛"]
+
+
+def _promotion_obligatoire(piece, joueur, y):
+    if piece == "歩" or piece == "香":
+        return (joueur == "Sente" and y == NB_CASES - 1) or (joueur == "Gote" and y == 0)
+    if piece == "桂":
+        return (joueur == "Sente" and y >= NB_CASES - 2) or (joueur == "Gote" and y <= 1)
     return False
 
 
@@ -237,7 +250,9 @@ def deplacerPiece(x1, y1, x2, y2):
     global check
     global currentPlayer
     global dernierJoueur
+    global promotion_en_attente
     prise = plateau[y2][x2][0]
+    promotion_en_attente = None
     if(plateau[y1][x1][1] != plateau[y2][x2][1]):
 
         if (y2,x2) in check:
@@ -257,15 +272,23 @@ def deplacerPiece(x1, y1, x2, y2):
 
         if reussiteDep == True :
             if ((plateau[y2][x2][1] == "Gote")):
-                if y2 <=2:
-                    plateau[y2][x2][2]=True
+                piece_deplacee = plateau[y2][x2][0]
+                if y2 <=2 and _peut_promouvoir(piece_deplacee) and not plateau[y2][x2][2]:
+                    if _promotion_obligatoire(piece_deplacee, "Gote", y2):
+                        plateau[y2][x2][2] = True
+                    else:
+                        promotion_en_attente = (x2, y2)
                 if prise != "":
                     for piece in priseGote:
                         if piece[0]==prise:
                             piece[1]+=1
             elif (plateau[y2][x2][1] == "Sente"):
-                if y2 >=6:
-                    plateau[y2][x2][2]=True
+                piece_deplacee = plateau[y2][x2][0]
+                if y2 >=6 and _peut_promouvoir(piece_deplacee) and not plateau[y2][x2][2]:
+                    if _promotion_obligatoire(piece_deplacee, "Sente", y2):
+                        plateau[y2][x2][2] = True
+                    else:
+                        promotion_en_attente = (x2, y2)
                 if prise != "":
                     for piece in priseSente:
                         if piece[0] == prise:
@@ -275,6 +298,19 @@ def deplacerPiece(x1, y1, x2, y2):
         currentPlayer = _adversaire(currentPlayer)
         verifEchecMat(currentPlayer)
     check = []
+
+
+def appliquerPromotion(promouvoir):
+    global promotion_en_attente
+    if promotion_en_attente is None:
+        return
+
+    x, y = promotion_en_attente
+    if promouvoir:
+        plateau[y][x][2] = True
+
+    promotion_en_attente = None
+    verifEchecMat(currentPlayer)
         
 def checkPion(x, y, joueur):
     global check
@@ -478,6 +514,7 @@ def reinitialise():
     global mat
     global echec_attaquant
     global dernierJoueur
+    global promotion_en_attente
 
     plateau = [
         [["香","Sente", False],["桂","Sente", False],["銀","Sente", False],["金","Sente", False],["王","Sente", False],["金","Sente", False],["銀","Sente", False],["桂","Sente", False],["香","Sente", False]],
@@ -499,6 +536,7 @@ def reinitialise():
     mat = [False, ""]
     echec_attaquant = None
     dernierJoueur = ""
+    promotion_en_attente = None
 
 def verifEchecMat(joueur):
     global echec

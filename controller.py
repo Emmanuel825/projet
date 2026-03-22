@@ -35,6 +35,12 @@ def clic(event):
         else:
             x1, y1 = selection
             model.deplacerPiece(x1, y1, x, y)
+            if model.promotion_en_attente is not None:
+                px, py = model.promotion_en_attente
+                piece = model.plateau[py][px][0]
+                joueur = model.plateau[py][px][1]
+                promouvoir = vue.demander_promotion(piece, joueur)
+                model.appliquerPromotion(promouvoir)
             selection = None
             vue.rafraichir(canvas, [])
     elif((event.x > vue.PRISES_HAUT_X and event.x < vue.PADDING_X)and(event.y > vue.PRISES_HAUT_Y and event.y < vue.PRISES_HAUT_Y+200)):

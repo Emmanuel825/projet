@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from PIL import Image, ImageTk
 import model
 
@@ -170,31 +171,12 @@ def dessiner_pieces(canvas):
                 cy = (y * TAILLE_CASE)+PADDING_Y
 
                 if joueur == "Sente" :
-
-                    if promu == True and piece != "金":
-                       fenetre = tk.Toplevel()
-                       fenetre.title("Promotion")
-                       fenetre.geometry("250x120")
-
-                       label = tk.Label(fenetre, text="Voulez-vous promouvoir la pièce ?")
-                       label.pack(pady=10)
-                       bouton_non = tk.Button(
-                       fenetre,
-                       image=pieces_images_promu_flip[piece],
-                       command=lambda: (fenetre, True)
-                       )
-                       bouton_non.pack(side=tk.LEFT)
-                       bouton_oui = tk.Button(
-                       fenetre,
-                       image= pieces_images_flip[piece],
-                       command=lambda: (fenetre, False)
-                       )
-                       bouton_oui.pack(side=tk.RIGHT)
-                       img = pieces_images_promu_flip[piece]
+                    if promu == True:
+                        img = pieces_images_promu_flip[piece]
                     else:
                         img = pieces_images_flip[piece]
                 else:
-                    if promu == True and piece != "金":
+                    if promu == True:
                         img = pieces_images_promu[piece]
                     else:
                         img = pieces_images[piece]
@@ -247,4 +229,9 @@ def rafraichir(canvas, check):
     canvas.create_image(PADDING_X, PADDING_Y, image=canvas.bg_image,anchor="nw")
     dessiner_plateau(canvas, check)
     dessiner_pieces(canvas)
+
+
+def demander_promotion(piece, joueur):
+    texte_joueur = "Sente" if joueur == "Sente" else "Gote"
+    return messagebox.askyesno("Promotion", f"{texte_joueur}: promouvoir la piece {piece} ?")
 

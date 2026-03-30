@@ -243,15 +243,15 @@ def musique() :
         pygame.mixer.init()
 
     musics = [
-        "violon.mp3",
-        "brook.mp3",
-        "Devilman.mp3",
-        "jane1.mp3",
-        "Bocchi.mp3",
-        "My.mp3",
-        "Parasyte.mp3",
-        "FB.mp3",
-        "Dr.mp3"
+        "msc/violon.mp3",
+        "msc/brook.mp3",
+        "msc/Devilman.mp3",
+        "msc/jane1.mp3",
+        "msc/Bocchi.mp3",
+        "msc/My.mp3",
+        "msc/Parasyte.mp3",
+        "msc/FB.mp3",
+        "msc/Dr.mp3"
         
     ]
     musics_file = random.choice(musics)

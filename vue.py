@@ -1,7 +1,9 @@
 import tkinter as tk
+import pygame
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import model
+import random
 
 TAILLE_CASE = 60
 NB_CASES = 9
@@ -51,13 +53,13 @@ def creer_fenetre():
     canvas.bg_image = bg_image
     
     canvas.create_image(PADDING_X, PADDING_Y, image=bg_image, anchor="nw")
-
+    bouton_pause = tk.Button(text="Pause")
+    bouton_play = tk.Button(text="Lire")
     charger_images()
-
+    musique()
     dessiner_plateau(canvas, [])
     dessiner_pieces(canvas)
-
-    return root, canvas
+    return root, canvas, bouton_pause, bouton_play
 
 
 def charger_images():
@@ -229,9 +231,31 @@ def rafraichir(canvas, check):
     canvas.create_image(PADDING_X, PADDING_Y, image=canvas.bg_image,anchor="nw")
     dessiner_plateau(canvas, check)
     dessiner_pieces(canvas)
-
+   
+   
 
 def demander_promotion(piece, joueur):
     texte_joueur = "Sente" if joueur == "Sente" else "Gote"
     return messagebox.askyesno("Promotion", f"{texte_joueur}: promouvoir la piece {piece} ?")
 
+def musique() :
+    if not pygame.mixer.get_init():
+        pygame.mixer.init()
+
+    musics = [
+        "violon.mp3",
+        "brook.mp3",
+        "Devilman.mp3",
+        "jane1.mp3",
+        "Bocchi.mp3",
+        "My.mp3",
+        "Parasyte.mp3",
+        "FB.mp3",
+        "Dr.mp3"
+        
+    ]
+    musics_file = random.choice(musics)
+    pygame.mixer.music.load(musics_file)
+    pygame.mixer.music.play()
+    pygame.mixer.music.set_volume(0.5)
+    return musics

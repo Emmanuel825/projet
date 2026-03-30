@@ -1,11 +1,11 @@
 import tkinter as tk
 import vue
 import model
-
+import pygame
 selection = None
 parachutage = None
 
-root, canvas = vue.creer_fenetre()
+root, canvas, bouton_pause, bouton_play = vue.creer_fenetre()
 
 def clic(event):
     global selection
@@ -72,5 +72,42 @@ def reCommence():
 
 rejouer = tk.Button(root, text="Rejouer", command=reCommence)
 rejouer.place(x = 1.2*800, y = 220)
+
+def pause_music():
+    pygame.mixer.music.pause()
+
+def resume_music():
+    pygame.mixer.music.unpause()
+
+def fermer_jeu() :
+    pygame.mixer.music.stop()
+    pygame.quit()
+    root.destroy()
+
+def changer_musique():
+    musique = vue.musique()
+
+    
+bouton_pause.config(command=pause_music)
+bouton_pause.place(x=300,y=300)
+bouton_play.config(command=resume_music)
+bouton_play.place(x=300,y=250)
+bouton_musique = tk.Button(root, text="Changer musique", command=changer_musique)
+bouton_musique.place(x= 200, y=350)
+
+def changer_volume(val):
+    volume = float(val) / 100
+    pygame.mixer.music.set_volume(volume)
+
+slidervolume = tk.Scale(
+    root,
+    from_=0,
+    to=100,
+    orient="horizontal",
+    label="Volume",
+    command=changer_volume
+)
+slidervolume.set(25)
+slidervolume.place(x=1.2*800,y=270)
 
 root.mainloop()

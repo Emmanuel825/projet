@@ -499,8 +499,7 @@ def checkRoi(x, y, joueur):
     check = saveCheck2
     return True
 
-def arreterJeu():
-    pass
+
 
 
 def reinitialise():

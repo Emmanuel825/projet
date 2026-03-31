@@ -85,7 +85,7 @@ def fermer_jeu() :
     root.destroy()
 
 def changer_musique():
-    musique = vue.musique()
+    vue.musique()
 
     
 bouton_pause.config(command=pause_music)

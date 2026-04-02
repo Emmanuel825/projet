@@ -499,9 +499,6 @@ def checkRoi(x, y, joueur):
     check = saveCheck2
     return True
 
-
-
-
 def reinitialise():
     global plateau
     global priseSente

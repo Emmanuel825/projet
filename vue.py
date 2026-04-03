@@ -140,12 +140,11 @@ def dessiner_plateau(canvas, check):
     else:
         playerColor = "blue"
     
-    canvas.create_text(PRISES_HAUT_X, (PADDING_Y+HAUTEUR)/2, text=model.currentPlayer, fill=playerColor, font=("Arial", 32), anchor="nw")
     if model.mat[0] and model.dernierJoueur != "":
         canvas.create_text(
             PRISES_HAUT_X,
-            (PADDING_Y+HAUTEUR)/2 + 45,
-            text=model.dernierJoueur,
+            (PADDING_Y+HAUTEUR)/2,
+            text="Vainqueur : \n"+model.dernierJoueur,
             fill="black",
             font=("Arial", 24),
             anchor="nw"
@@ -153,11 +152,13 @@ def dessiner_plateau(canvas, check):
         canvas.create_text(
             PRISES_HAUT_X,
             (PADDING_Y+HAUTEUR)/2 + 80,
-            text="défaite",
+            text="fin du jeu",
             fill="red",
             font=("Arial", 28, "bold"),
             anchor="nw"
         )
+    else:
+        canvas.create_text(PRISES_HAUT_X, (PADDING_Y+HAUTEUR)/2, text=model.currentPlayer, fill=playerColor, font=("Arial", 32), anchor="nw")
     
 
 def dessiner_pieces(canvas):

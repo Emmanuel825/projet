@@ -89,11 +89,11 @@ def changer_musique():
 
     
 bouton_pause.config(command=pause_music)
-bouton_pause.place(x=300,y=300)
+bouton_pause.place(x=vue.PADDING_X+vue.LARGEUR,y=vue.PADDING_Y)
 bouton_play.config(command=resume_music)
-bouton_play.place(x=300,y=250)
+bouton_play.place(x=vue.PADDING_X+vue.LARGEUR,y=vue.PADDING_Y+30)
 bouton_musique = tk.Button(root, text="Changer musique", command=changer_musique)
-bouton_musique.place(x= 200, y=350)
+bouton_musique.place(x=vue.PADDING_X+vue.LARGEUR,y=vue.PADDING_Y+60)
 
 def changer_volume(val):
     volume = float(val) / 100
@@ -108,6 +108,6 @@ slidervolume = tk.Scale(
     command=changer_volume
 )
 slidervolume.set(25)
-slidervolume.place(x=1.2*800,y=270)
+slidervolume.place(x=vue.PADDING_X+vue.LARGEUR,y=vue.PADDING_Y+90)
 
 root.mainloop()
